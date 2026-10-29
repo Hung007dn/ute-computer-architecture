@@ -2,7 +2,7 @@
 
 Nền tảng học và ôn thi môn Kiến trúc máy tính dành cho sinh viên HCMUTE.
 
-Xin chào mọi người, mình là Vũ Trọng Hưng, hiện đang là sinh viên trường Công Nghệ Kỹ Thuật Tp HCM (HCMUTE), mình làm web này là giúp đỡ mọi người học tập, ôn tập và luyện thi cho môn kiến trúc và hợp ngữ, giúp cho sinh viên có thể tiếp cận và làm cho sinh viên thoát khỏi nỗi sợ về môn này.
+Xin chào mọi người, mình là Vũ Trọng Hưng, hiện đang là sinh viên trường Công Nghệ Kỹ Thuật Tp HCM (HCMUTE), khoa CNTT, mình làm web này là giúp đỡ mọi người học tập, ôn tập và luyện thi cho môn kiến trúc và hợp ngữ, giúp cho sinh viên có thể tiếp cận và làm cho sinh viên thoát khỏi nỗi sợ về môn này.
 Hiện web vẫn đang trong quá trình xây dựng và sẽ liên tục update để cho mọi người có một web để sử dụng hoàn chỉnh, mọi người có ý kiến hay bổ sung gì có thể nhắn tin qua zalo (sdt: 0911112020) và facebook ở phần mô tả trên trang cá nhân git mình nhé
 Xin cảm ơn mọi người!!!
 ## Tính năng
