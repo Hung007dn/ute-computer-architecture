@@ -69,4 +69,4 @@ Không commit `.env`, `.dev.vars`, khóa bí mật hoặc token. Các file này 
 
 ## Bản đang hoạt động
 
-[UTE Computer Architecture](https://kien-truc-may-tinh-hub-2026.chatgpt-3518.chatgpt.site/)
+[UTE Computer Architecture](https://ute-computer-architecture.hung007dn.workers.dev)

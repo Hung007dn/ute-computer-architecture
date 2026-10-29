@@ -1,7 +1,6 @@
 import { env } from "cloudflare:workers";
 import { desc, eq } from "drizzle-orm";
 import { NextResponse } from "next/server";
-import { getChatGPTUser } from "@/app/chatgpt-auth";
 import { getDb } from "@/db";
 import { documents } from "@/db/schema";
 
@@ -16,9 +15,6 @@ function safeFileName(value: string) {
 }
 
 export async function GET() {
-  const user = await getChatGPTUser();
-  if (!user) return NextResponse.json({ error: "UNAUTHORIZED" }, { status: 401 });
-
   const db = getDb();
   const rows = await db.select({
     id: documents.id,
@@ -36,9 +32,9 @@ export async function GET() {
 }
 
 export async function POST(request: Request) {
-  const user = await getChatGPTUser();
-  if (!user) return NextResponse.json({ error: "Bạn cần đăng nhập để tải tài liệu lên." }, { status: 401 });
-  if (!env.BUCKET) return NextResponse.json({ error: "Kho lưu trữ chưa được cấu hình." }, { status: 503 });
+  if (!env.ADMIN_UPLOAD_KEY) return NextResponse.json({ error: "Mật khẩu quản trị chưa được cấu hình." }, { status: 503 });
+  if (request.headers.get("x-admin-upload-key") !== env.ADMIN_UPLOAD_KEY) return NextResponse.json({ error: "Mật khẩu quản trị không đúng." }, { status: 401 });
+  if (!env.DOCUMENTS) return NextResponse.json({ error: "Kho lưu trữ chưa được cấu hình." }, { status: 503 });
 
   const form = await request.formData();
   const file = form.get("file");
@@ -62,9 +58,8 @@ export async function POST(request: Request) {
   if (!title) return NextResponse.json({ error: "Tên tài liệu không được để trống." }, { status: 400 });
 
   const key = `documents/${crypto.randomUUID()}-${safeFileName(file.name)}`;
-  await env.BUCKET.put(key, file.stream(), {
-    httpMetadata: { contentType: file.type },
-    customMetadata: { originalName: file.name, uploaderId: user.userId },
+  await env.DOCUMENTS.put(key, await file.arrayBuffer(), {
+    metadata: { originalName: file.name, contentType: file.type },
   });
 
   try {
@@ -74,14 +69,14 @@ export async function POST(request: Request) {
       description,
       year: new Date().getFullYear(),
       type,
-      source: user.email,
+      source: "Quản trị viên HCMUTE",
       fileUrl: key,
       published: true,
     }).returning({ id: documents.id, title: documents.title, description: documents.description, year: documents.year, type: documents.type, source: documents.source, createdAt: documents.createdAt });
 
     return NextResponse.json({ document: { ...created, downloadUrl: `/api/documents/${created.id}` } }, { status: 201 });
   } catch (error) {
-    await env.BUCKET.delete(key);
+    await env.DOCUMENTS.delete(key);
     console.error("Document metadata insert failed", error);
     return NextResponse.json({ error: "Không thể lưu thông tin tài liệu. Vui lòng thử lại." }, { status: 500 });
   }

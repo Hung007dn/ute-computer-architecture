@@ -1,6 +1,7 @@
 declare namespace Cloudflare {
   interface Env {
     DB?: D1Database;
-    BUCKET?: R2Bucket;
+    DOCUMENTS?: KVNamespace;
+    ADMIN_UPLOAD_KEY?: string;
   }
 }

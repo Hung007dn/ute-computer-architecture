@@ -1,0 +1,29 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "ute-computer-architecture",
+  "main": "dist/server/index.js",
+  "compatibility_date": "2026-05-15",
+  "compatibility_flags": ["nodejs_compat"],
+  "no_bundle": true,
+  "rules": [
+    { "type": "ESModule", "globs": ["**/*.js", "**/*.mjs"] }
+  ],
+  "assets": {
+    "directory": "dist/client",
+    "binding": "ASSETS"
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "ute-computer-architecture-db",
+      "database_id": "ccb0e172-0dda-43c6-b8f1-882a8a7b9f06"
+    }
+  ],
+  "kv_namespaces": [
+    {
+      "binding": "DOCUMENTS",
+      "id": "668e3c43c9104d579c578e2a92b3e630"
+    }
+  ],
+  "observability": { "enabled": true }
+}

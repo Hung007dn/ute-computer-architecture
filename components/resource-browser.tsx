@@ -28,9 +28,11 @@ function DocumentUploader({ onUploaded }: { onUploaded: (document: UploadedDocum
     setMessage(null);
     const form = event.currentTarget;
     const body = new FormData(form);
+    const adminKey = String(body.get("adminKey") || "");
+    body.delete("adminKey");
 
     try {
-      const response = await fetch("/api/documents", { method: "POST", body });
+      const response = await fetch("/api/documents", { method: "POST", body, headers: { "x-admin-upload-key": adminKey } });
       const result = await response.json() as { document?: UploadedDocument; error?: string };
       if (!response.ok || !result.document) throw new Error(result.error || "Không thể tải tài liệu lên.");
       onUploaded(result.document);
@@ -52,6 +54,7 @@ function DocumentUploader({ onUploaded }: { onUploaded: (document: UploadedDocum
       <label className="sm:col-span-2"><span className="mb-2 block text-xs font-bold">Tên tài liệu</span><input name="title" required maxLength={160} className="h-12 w-full rounded-xl border border-border bg-page px-4 text-sm outline-none focus:border-cyan-400" placeholder="Ví dụ: Slide chương 1 – Tổng quan" /></label>
       <label><span className="mb-2 block text-xs font-bold">Phân loại</span><select name="type" className="h-12 w-full rounded-xl border border-border bg-page px-4 text-sm outline-none focus:border-cyan-400">{categories.map(item => <option key={item}>{item}</option>)}</select></label>
       <label><span className="mb-2 block text-xs font-bold">Chọn file</span><input ref={fileRef} name="file" type="file" required accept=".pdf,.docx,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document" className="block h-12 w-full cursor-pointer rounded-xl border border-border bg-page text-sm file:mr-3 file:h-full file:border-0 file:border-r file:border-border file:bg-soft file:px-4 file:font-bold" /></label>
+      <label className="sm:col-span-2"><span className="mb-2 block text-xs font-bold">Mật khẩu quản trị</span><input name="adminKey" type="password" required autoComplete="current-password" className="h-12 w-full rounded-xl border border-border bg-page px-4 text-sm outline-none focus:border-cyan-400" placeholder="Nhập mật khẩu để tải tài liệu" /></label>
       <label className="sm:col-span-2"><span className="mb-2 block text-xs font-bold">Mô tả <span className="font-normal text-muted">(không bắt buộc)</span></span><textarea name="description" maxLength={500} rows={3} className="w-full rounded-xl border border-border bg-page p-4 text-sm outline-none focus:border-cyan-400" placeholder="Nội dung chính hoặc ghi chú về tài liệu" /></label>
       <div className="flex flex-wrap items-center gap-3 sm:col-span-2"><button disabled={uploading} className="primary-button disabled:cursor-not-allowed disabled:opacity-60" type="submit">{uploading ? <><LoaderCircle size={16} className="animate-spin" />Đang tải lên...</> : <><UploadCloud size={16} />Tải tài liệu lên</>}</button>{message && <p role="status" className={`text-sm font-semibold ${message.type === "success" ? "text-emerald-500" : "text-rose-500"}`}>{message.text}</p>}</div>
     </form>
