@@ -9,6 +9,7 @@ const allowedTypes = new Map([
   ["application/pdf", "pdf"],
   ["application/vnd.openxmlformats-officedocument.wordprocessingml.document", "docx"],
 ]);
+const allowedLecturers = new Set(["Kiến thức chung", "Đinh Công Đoan", "Võ Lê Phúc Hậu"]);
 
 function safeFileName(value: string) {
   return value.normalize("NFKD").replace(/[^a-zA-Z0-9._-]+/g, "-").replace(/-+/g, "-").replace(/^-|-$/g, "").slice(-120) || "document";
@@ -22,6 +23,8 @@ export async function GET() {
     description: documents.description,
     year: documents.year,
     type: documents.type,
+    lecturer: documents.lecturer,
+    chapter: documents.chapter,
     source: documents.source,
     createdAt: documents.createdAt,
   }).from(documents).where(eq(documents.published, true)).orderBy(desc(documents.createdAt));
@@ -40,6 +43,8 @@ export async function POST(request: Request) {
   const file = form.get("file");
   const titleValue = form.get("title");
   const typeValue = form.get("type");
+  const lecturerValue = form.get("lecturer");
+  const chapterValue = form.get("chapter");
   const descriptionValue = form.get("description");
 
   if (!(file instanceof File)) return NextResponse.json({ error: "Vui lòng chọn một file PDF hoặc DOCX." }, { status: 400 });
@@ -54,8 +59,12 @@ export async function POST(request: Request) {
 
   const title = String(titleValue || file.name.replace(/\.[^.]+$/, "")).trim().slice(0, 160);
   const type = String(typeValue || "Tài liệu").trim().slice(0, 40);
+  const lecturer = String(lecturerValue || "Kiến thức chung").trim();
+  const chapter = String(chapterValue || "Tất cả chương").trim().slice(0, 120);
   const description = String(descriptionValue || "Tài liệu học tập do quản trị viên tải lên.").trim().slice(0, 500);
   if (!title) return NextResponse.json({ error: "Tên tài liệu không được để trống." }, { status: 400 });
+  if (!allowedLecturers.has(lecturer)) return NextResponse.json({ error: "Giảng viên không hợp lệ." }, { status: 400 });
+  if (!chapter) return NextResponse.json({ error: "Vui lòng chọn chương cho tài liệu." }, { status: 400 });
 
   const key = `documents/${crypto.randomUUID()}-${safeFileName(file.name)}`;
   await env.DOCUMENTS.put(key, await file.arrayBuffer(), {
@@ -69,10 +78,12 @@ export async function POST(request: Request) {
       description,
       year: new Date().getFullYear(),
       type,
-      source: "Quản trị viên HCMUTE",
+      lecturer,
+      chapter,
+      source: lecturer === "Kiến thức chung" ? "HCMUTE Learning Lab" : `GV. ${lecturer}`,
       fileUrl: key,
       published: true,
-    }).returning({ id: documents.id, title: documents.title, description: documents.description, year: documents.year, type: documents.type, source: documents.source, createdAt: documents.createdAt });
+    }).returning({ id: documents.id, title: documents.title, description: documents.description, year: documents.year, type: documents.type, lecturer: documents.lecturer, chapter: documents.chapter, source: documents.source, createdAt: documents.createdAt });
 
     return NextResponse.json({ document: { ...created, downloadUrl: `/api/documents/${created.id}` } }, { status: 201 });
   } catch (error) {
