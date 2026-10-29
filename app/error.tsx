@@ -1,0 +1,3 @@
+"use client";
+import { AlertTriangle, RefreshCw } from "lucide-react";
+export default function ErrorPage({reset}:{error:Error&{digest?:string};reset:()=>void}){return <div className="page-container grid min-h-[65vh] place-items-center py-20 text-center"><div className="max-w-md"><AlertTriangle className="mx-auto text-amber-500" size={48}/><h1 className="mt-5 text-3xl font-black">Đã có lỗi xảy ra</h1><p className="muted-copy mt-3">Dữ liệu chưa tải được. Bạn có thể thử lại mà không mất tiến độ.</p><button onClick={reset} className="primary-button mt-7"><RefreshCw size={16}/> Thử lại</button></div></div>}

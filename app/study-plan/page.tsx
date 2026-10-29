@@ -1,0 +1,2 @@
+import { StudyPlan } from "@/components/study-plan";
+export default function StudyPlanPage(){return <div className="page-container section-space"><div className="mb-9 max-w-2xl"><span className="eyebrow">Smart review plan</span><h1 className="section-title mt-4">Kế hoạch ôn thi theo thời gian còn lại.</h1><p className="muted-copy mt-4">Chọn ngày thi để nhận lịch ưu tiên kiến thức trọng tâm và phiên luyện đề.</p></div><StudyPlan/></div>}

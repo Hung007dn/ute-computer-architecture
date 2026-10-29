@@ -1,0 +1,2 @@
+import Link from "@/components/safe-link";
+export default function NotFound(){return <div className="page-container grid min-h-[65vh] place-items-center py-20 text-center"><div><strong className="mono text-8xl text-blue-500">404</strong><h1 className="mt-5 text-3xl font-black">Không tìm thấy nội dung</h1><p className="muted-copy mt-3">Đường dẫn có thể đã thay đổi hoặc bài học chưa được xuất bản.</p><Link href="/" className="primary-button mt-7">Về trang chủ</Link></div></div>}

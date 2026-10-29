@@ -1,0 +1,2 @@
+import { ResourceBrowser } from "@/components/resource-browser";
+export default function VideosPage(){return <div className="page-container section-space"><div className="mb-10 max-w-3xl"><span className="eyebrow">Video library</span><h1 className="section-title mt-4">Video bài giảng ngắn,<br/>đúng trọng tâm.</h1><p className="muted-copy mt-4">Lọc theo ngôn ngữ, theo dõi trạng thái đã xem và quay lại đúng nội dung cần ôn.</p></div><ResourceBrowser kind="videos"/></div>}
