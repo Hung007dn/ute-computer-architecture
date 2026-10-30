@@ -1,11 +1,13 @@
 # UTE Computer Architecture
 
 ## Thông tin website
-
+Xin chào mọi người, mình là Vũ Trọng Hưng, hiện vẫn đang là sinh viên năm 3 ngành An Toàn Thông Tin, Khoa CNTT của Trường Đại Học CNKT (HCMUTE)
 UTE Computer Architecture là website hỗ trợ sinh viên HCMUTE học tập và ôn thi môn **Kiến trúc máy tính và Hợp ngữ**.
 
 Website tổng hợp bài học, bài tập, đề thi thử, video và tài liệu học tập trong một hệ thống thống nhất. Nội dung được trình bày theo từng chương, kèm ví dụ thực tế để người học dễ hiểu và dễ ôn tập hơn.
 
+Web vẫn đang trong quá trình cải thiện nên nếu có vấn đề gì mọi người có thể nhắn liên hệ qua Zalo hoặc facebook nhé
+Xin cảm ơn mọi người!
 ## Truy cập website
 
 **[Mở UTE Computer Architecture](https://ute-computer-architecture.hung007dn.workers.dev)**
