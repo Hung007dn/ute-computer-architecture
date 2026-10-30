@@ -11,16 +11,16 @@ export type Chapter = {
 };
 
 export const chapters: Chapter[] = [
-  { id: 1, slug: "tong-quan", title: "Tổng quan kiến trúc máy tính", description: "Von Neumann, thành phần hệ thống và hành trình của một chương trình.", lessons: 2, exercises: 8, quizzes: 5, progress: 100, icon: "⌘" },
-  { id: 2, slug: "he-dem", title: "Hệ đếm và chuyển đổi cơ số", description: "Nhị phân, bát phân, thập phân, thập lục phân và cách chuyển đổi.", lessons: 2, exercises: 18, quizzes: 8, progress: 86, icon: "01" },
-  { id: 3, slug: "bieu-dien-du-lieu", title: "Biểu diễn dữ liệu", description: "Số nguyên, ký tự, fixed-point và IEEE 754.", lessons: 2, exercises: 16, quizzes: 8, progress: 72, icon: "Fx" },
-  { id: 4, slug: "so-co-dau", title: "Số có dấu · Bù 1 · Bù 2", description: "Miền giá trị, tràn số và phép toán số có dấu.", lessons: 2, exercises: 22, quizzes: 10, progress: 68, icon: "±" },
-  { id: 5, slug: "cpu-tap-lenh", title: "CPU và tập lệnh", description: "Fetch–decode–execute, ISA và các kiểu định địa chỉ.", lessons: 2, exercises: 20, quizzes: 9, progress: 55, icon: "CPU" },
-  { id: 6, slug: "datapath", title: "ALU · Registers · Datapath", description: "Đường dữ liệu, tín hiệu điều khiển và các thanh ghi quan trọng.", lessons: 2, exercises: 14, quizzes: 7, progress: 40, icon: "ALU" },
-  { id: 7, slug: "bo-nho-cache", title: "Bộ nhớ · RAM · ROM · Cache", description: "Phân cấp bộ nhớ, ánh xạ cache và AMAT.", lessons: 2, exercises: 25, quizzes: 12, progress: 32, icon: "MEM" },
-  { id: 8, slug: "bus-io", title: "Bus · I/O · Interrupt", description: "Giao tiếp thiết bị, polling, interrupt và DMA.", lessons: 2, exercises: 12, quizzes: 6, progress: 20, icon: "I/O" },
-  { id: 9, slug: "hieu-nang", title: "Performance · CPI · Clock Cycle", description: "Đo hiệu năng, speedup và phương trình CPU time.", lessons: 2, exercises: 18, quizzes: 8, progress: 10, icon: "CPI" },
-  { id: 10, slug: "assembly", title: "Assembly · x86 · x86-64", description: "Thanh ghi, lệnh cơ bản, stack và gọi hàm.", lessons: 2, exercises: 24, quizzes: 10, progress: 0, icon: "ASM" },
+  { id: 1, slug: "tong-quan", title: "Tổng quan kiến trúc máy tính", description: "Phân biệt kiến trúc và tổ chức, mô hình Von Neumann, chu kỳ lệnh và các tầng của hệ thống.", lessons: 4, exercises: 8, quizzes: 5, progress: 100, icon: "⌘" },
+  { id: 2, slug: "he-dem", title: "Hệ đếm và chuyển đổi cơ số", description: "Giá trị theo vị trí, chuyển đổi BIN–OCT–DEC–HEX và phép toán nhị phân.", lessons: 4, exercises: 18, quizzes: 8, progress: 86, icon: "01" },
+  { id: 3, slug: "bieu-dien-du-lieu", title: "Biểu diễn dữ liệu", description: "Số nguyên, ký tự Unicode, thứ tự byte và số thực IEEE 754.", lessons: 4, exercises: 16, quizzes: 8, progress: 72, icon: "Fx" },
+  { id: 4, slug: "so-co-dau", title: "Số có dấu · Bù 1 · Bù 2", description: "Biểu diễn số âm, mở rộng dấu, miền giá trị và phát hiện overflow.", lessons: 4, exercises: 22, quizzes: 10, progress: 68, icon: "±" },
+  { id: 5, slug: "cpu-tap-lenh", title: "CPU và tập lệnh", description: "Chu kỳ Fetch–Decode–Execute, ISA, định dạng lệnh và các kiểu định địa chỉ.", lessons: 4, exercises: 20, quizzes: 9, progress: 55, icon: "CPU" },
+  { id: 6, slug: "datapath", title: "ALU · Registers · Datapath", description: "Đường đi dữ liệu, register file, ALU, multiplexer và tín hiệu điều khiển.", lessons: 4, exercises: 14, quizzes: 7, progress: 40, icon: "ALU" },
+  { id: 7, slug: "bo-nho-cache", title: "Bộ nhớ · RAM · ROM · Cache", description: "Phân cấp bộ nhớ, locality, tag/index/offset, ánh xạ cache và AMAT.", lessons: 4, exercises: 25, quizzes: 12, progress: 32, icon: "MEM" },
+  { id: 8, slug: "bus-io", title: "Bus · I/O · Interrupt", description: "Bus hệ thống, memory-mapped I/O, polling, interrupt, DMA và băng thông.", lessons: 4, exercises: 12, quizzes: 6, progress: 20, icon: "I/O" },
+  { id: 9, slug: "hieu-nang", title: "Performance · CPI · Clock Cycle", description: "Latency, throughput, CPU time, speedup và giới hạn theo định luật Amdahl.", lessons: 4, exercises: 18, quizzes: 8, progress: 10, icon: "CPI" },
+  { id: 10, slug: "assembly", title: "Assembly · x86 · x86-64", description: "Thanh ghi, cờ trạng thái, lệnh cơ bản, stack, calling convention và lời gọi hàm.", lessons: 4, exercises: 24, quizzes: 10, progress: 0, icon: "ASM" },
 ];
 
 export type Question = {

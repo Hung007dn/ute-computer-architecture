@@ -3,8 +3,10 @@
 import { useState } from "react";
 import Link from "@/components/safe-link";
 import type { Chapter } from "@/data/course";
+import { chapterContents, type ChapterLessonContent } from "@/data/lesson-content";
 import { LessonActions } from "@/components/lesson-actions";
 import {
+  AlertTriangle,
   ArrowLeft,
   ArrowRight,
   BookOpen,
@@ -20,43 +22,36 @@ import {
 type SectionId = "concepts" | "formula" | "video" | "quiz";
 
 const sections = [
-  { id: "concepts" as const, label: "1. Khái niệm cốt lõi", shortLabel: "Khái niệm", icon: CheckCircle2 },
+  { id: "concepts" as const, label: "1. Lý thuyết chi tiết", shortLabel: "Lý thuyết", icon: CheckCircle2 },
   { id: "formula" as const, label: "2. Công thức và ví dụ", shortLabel: "Công thức", icon: BookOpen },
   { id: "video" as const, label: "Video minh họa", shortLabel: "Video", icon: PlayCircle },
   { id: "quiz" as const, label: "Quiz cuối chương", shortLabel: "Quiz", icon: Calculator },
 ];
 
-const sidebarDetails: Record<SectionId, { title: string; items: string[] }> = {
-  concepts: { title: "Trong phần này", items: ["Ý tưởng cốt lõi", "Mô hình Von Neumann", "Thành phần hệ thống"] },
-  formula: { title: "Trong phần này", items: ["Công thức CPU Time", "Ví dụ tính toán", "Cách suy luận"] },
-  video: { title: "Video bài học", items: ["Mục tiêu video", "Nội dung minh họa", "Ghi chú khi xem"] },
-  quiz: { title: "Kiểm tra kiến thức", items: ["Thông tin bài quiz", "Nội dung kiểm tra", "Bắt đầu làm bài"] },
-};
-
-function ArchitectureVisual() {
+function ArchitectureVisual({ content }: { content: ChapterLessonContent }) {
   return (
     <div className="aspect-video overflow-hidden rounded-2xl bg-slate-950 p-6 text-white sm:p-9">
       <div className="flex items-center justify-between text-[10px] text-slate-400"><span className="mono">ARCHITECTURE VIEW</span><span className="h-2 w-2 animate-pulse rounded-full bg-cyan-400" /></div>
-      <div className="mt-8 grid h-[70%] grid-cols-3 gap-3">
-        <div className="grid place-items-center rounded-xl border border-cyan-400/40 bg-cyan-400/10"><span className="text-center"><b className="mono block text-cyan-300">CPU</b><small>Control + Datapath</small></span></div>
-        <div className="grid place-items-center rounded-xl border border-blue-400/30 bg-blue-400/10"><span className="text-center"><b className="mono block text-blue-300">BUS</b><small>Address · Data</small></span></div>
-        <div className="grid place-items-center rounded-xl border border-violet-400/30 bg-violet-400/10"><span className="text-center"><b className="mono block text-violet-300">MEM</b><small>Instructions + Data</small></span></div>
-      </div>
+      <div className="mt-8 grid h-[70%] grid-cols-3 gap-3">{content.diagram.map((item, index) => <div key={item.label} className={`grid place-items-center rounded-xl border ${index === 0 ? "border-cyan-400/40 bg-cyan-400/10" : index === 1 ? "border-blue-400/30 bg-blue-400/10" : "border-violet-400/30 bg-violet-400/10"}`}><span className="px-2 text-center"><b className={`mono block text-xs sm:text-base ${index === 0 ? "text-cyan-300" : index === 1 ? "text-blue-300" : "text-violet-300"}`}>{item.label}</b><small className="mt-1 block text-[9px] text-slate-300 sm:text-xs">{item.detail}</small></span></div>)}</div>
     </div>
   );
 }
 
 function SectionContent({ active, chapter }: { active: SectionId; chapter: Chapter }) {
+  const content = chapterContents[chapter.slug];
+
   if (active === "concepts") {
     return (
       <div>
-        <ArchitectureVisual />
+        <section className="mb-6 rounded-2xl border border-border bg-surface p-5 sm:p-6">
+          <div className="flex items-center gap-2"><Target size={18} className="text-blue-500" /><h2 className="font-black">Học xong chương này, bạn có thể</h2></div>
+          <div className="mt-4 grid gap-3 sm:grid-cols-3">{content.objectives.map((objective, index) => <div key={objective} className="flex gap-3 rounded-xl bg-soft p-4"><span className="mono grid h-6 w-6 shrink-0 place-items-center rounded-full bg-blue-500 text-[10px] font-bold text-white">{index + 1}</span><p className="text-xs font-semibold leading-5">{objective}</p></div>)}</div>
+        </section>
+        <ArchitectureVisual content={content} />
         <section className="prose-area">
-          <h2>Ý tưởng cốt lõi</h2>
-          <p>Kiến trúc máy tính mô tả những thuộc tính hệ thống mà lập trình viên có thể quan sát: tập lệnh, kiểu dữ liệu, cơ chế định địa chỉ và hành vi vào/ra. Tổ chức máy tính giải thích cách các khối phần cứng phối hợp để hiện thực kiến trúc đó.</p>
-          <div className="note"><Lightbulb /><div><strong>Ghi nhớ</strong><p>Architecture trả lời “máy tính làm được gì”, organization trả lời “phần cứng làm điều đó như thế nào”.</p></div></div>
-          <h2>Mô hình Von Neumann</h2>
-          <p>Lệnh và dữ liệu cùng nằm trong bộ nhớ. CPU lần lượt nạp lệnh, giải mã, thực thi rồi cập nhật trạng thái. Chu kỳ này là nền tảng để hiểu mọi chương tiếp theo.</p>
+          {content.sections.map(section => <div key={section.title}><h2>{section.title}</h2><p>{section.body}</p>{section.points && <ul className="mt-4 space-y-2">{section.points.map(point => <li key={point} className="flex gap-3 text-sm text-muted"><CheckCircle2 size={16} className="mt-1 shrink-0 text-cyan-500" /><span>{point}</span></li>)}</ul>}</div>)}
+          <div className="note"><Lightbulb className="shrink-0" /><div><strong>Điểm cần nhớ</strong><p>{content.takeaway}</p></div></div>
+          <div className="mt-7 rounded-2xl border border-amber-400/30 bg-amber-400/5 p-5"><div className="flex items-center gap-2 text-amber-600"><AlertTriangle size={18} /><strong>Lỗi thường gặp</strong></div><ul className="mt-3 space-y-2">{content.mistakes.map(item => <li key={item} className="flex gap-2 text-sm text-muted"><span className="text-amber-500">•</span>{item}</li>)}</ul></div>
         </section>
       </div>
     );
@@ -66,16 +61,12 @@ function SectionContent({ active, chapter }: { active: SectionId; chapter: Chapt
     return (
       <section className="prose-area rounded-2xl border border-border bg-surface p-6 sm:p-8">
         <span className="eyebrow">Công thức trọng tâm</span>
-        <h2 className="mt-5">CPU Time và hiệu năng</h2>
-        <p>Thời gian CPU phụ thuộc vào số lệnh của chương trình, số chu kỳ trung bình cho mỗi lệnh và tần số xung nhịp.</p>
-        <div className="formula"><small>CPU TIME</small><strong>Instruction Count × CPI / Clock Rate</strong></div>
-        <h2>Ví dụ suy luận</h2>
-        <p>Với 10⁹ lệnh, CPI trung bình bằng 2 và xung nhịp 2 GHz, thời gian CPU là 1 giây. Công thức cho thấy tăng xung nhịp chưa chắc làm chương trình nhanh nếu CPI hoặc số lệnh tăng.</p>
-        <div className="mt-6 grid gap-3 sm:grid-cols-3">
-          <div className="rounded-xl bg-soft p-4"><small className="text-muted">Instruction Count</small><strong className="mono mt-2 block">10⁹</strong></div>
-          <div className="rounded-xl bg-soft p-4"><small className="text-muted">CPI</small><strong className="mono mt-2 block">2</strong></div>
-          <div className="rounded-xl bg-soft p-4"><small className="text-muted">Kết quả</small><strong className="mono mt-2 block text-blue-500">1 giây</strong></div>
-        </div>
+        <h2 className="mt-5">Công thức và quan hệ cần nhớ</h2>
+        <div className="space-y-4">{content.formulas.map(formula => <div key={formula.label} className="formula"><small>{formula.label.toUpperCase()}</small><strong>{formula.expression}</strong><p className="mt-3 !text-xs !text-slate-300">{formula.explanation}</p></div>)}</div>
+        <h2>Ví dụ giải từng bước</h2>
+        <div className="rounded-xl bg-soft p-5"><small className="font-bold uppercase tracking-wider text-blue-500">Đề bài</small><p className="mt-2 !text-main">{content.example.problem}</p></div>
+        <ol className="mt-5 space-y-3">{content.example.steps.map((step, index) => <li key={step} className="flex gap-3 rounded-xl border border-border p-4"><span className="mono grid h-7 w-7 shrink-0 place-items-center rounded-full bg-blue-500/10 text-xs font-bold text-blue-500">{index + 1}</span><span className="text-sm leading-6 text-muted">{step}</span></li>)}</ol>
+        <div className="mt-5 rounded-xl border border-emerald-400/30 bg-emerald-400/10 p-5"><small className="font-bold uppercase tracking-wider text-emerald-600">Kết luận</small><p className="mt-2 !font-semibold !text-main">{content.example.result}</p></div>
       </section>
     );
   }
@@ -107,7 +98,14 @@ function SectionContent({ active, chapter }: { active: SectionId; chapter: Chapt
 
 export function LessonContentTabs({ chapter, previousChapter, nextChapter }: { chapter: Chapter; previousChapter: Chapter | null; nextChapter: Chapter | null }) {
   const [active, setActive] = useState<SectionId>("concepts");
-  const details = sidebarDetails[active];
+  const content = chapterContents[chapter.slug];
+  const details = active === "concepts"
+    ? { title: "Trong phần này", items: ["Mục tiêu học tập", ...content.sections.map(item => item.title), "Lỗi thường gặp"] }
+    : active === "formula"
+      ? { title: "Công thức & ví dụ", items: [...content.formulas.map(item => item.label), "Ví dụ giải từng bước", "Kết luận"] }
+      : active === "video"
+        ? { title: "Video bài học", items: ["Mục tiêu video", "Nội dung minh họa", "Ghi chú khi xem"] }
+        : { title: "Kiểm tra kiến thức", items: ["Thông tin bài quiz", "Nội dung kiểm tra", "Bắt đầu làm bài"] };
 
   const selectSection = (section: SectionId) => {
     setActive(section);
@@ -141,7 +139,7 @@ export function LessonContentTabs({ chapter, previousChapter, nextChapter }: { c
         <div className="sticky top-24">
           <div className="mb-5 flex items-center gap-2"><List size={15} /><strong className="text-xs">{details.title}</strong></div>
           {details.items.map((item, index) => <span key={item} className={`block py-2 pl-3 text-xs ${index === 0 ? "border-l-2 border-cyan-400 text-blue-500" : "border-l border-border text-muted"}`}>{item}</span>)}
-          {active === "formula" && <div className="mt-8 rounded-xl bg-soft p-4"><small className="font-bold text-muted">CÔNG THỨC</small><div className="mono mt-2 text-xs">T = IC × CPI / f</div></div>}
+          {active === "formula" && <div className="mt-8 rounded-xl bg-soft p-4"><small className="font-bold text-muted">CÔNG THỨC</small><div className="mono mt-2 text-xs leading-5">{content.formulas[0].expression}</div></div>}
           <div className="mt-8 rounded-xl border border-border p-4"><small className="font-bold text-muted">TIẾN ĐỘ PHẦN HỌC</small><div className="progress-track mt-3"><div className="progress-fill" style={{ width: `${((sections.findIndex((item) => item.id === active) + 1) / sections.length) * 100}%` }} /></div><p className="mt-2 text-[10px] text-muted">Phần {sections.findIndex((item) => item.id === active) + 1} / {sections.length}</p></div>
         </div>
       </aside>
