@@ -58,9 +58,6 @@ export default async function AccountPage() {
           <div className="flex flex-col gap-4 border-t border-border bg-soft p-6 sm:flex-row sm:items-center sm:justify-between sm:p-8">
             <div>
               <h2 className="font-bold">Bảo mật tài khoản</h2>
-              <p className="mt-1 text-sm text-muted">
-                Bạn có thể chủ động đổi mật khẩu bất cứ lúc nào.
-              </p>
             </div>
             <Link
               href="/change-password?returnTo=/account"
