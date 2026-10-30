@@ -8,11 +8,15 @@ import { LessonActions } from "@/components/lesson-actions";
 import {
   AlertTriangle,
   ArrowLeft,
+  ArrowLeftRight,
   ArrowRight,
   BookOpen,
   Calculator,
   CheckCircle2,
   Clock3,
+  Cpu,
+  Database,
+  Keyboard,
   Lightbulb,
   List,
   PlayCircle,
@@ -27,6 +31,53 @@ const sections = [
   { id: "video" as const, label: "Video minh họa", shortLabel: "Video", icon: PlayCircle },
   { id: "quiz" as const, label: "Quiz cuối chương", shortLabel: "Quiz", icon: Calculator },
 ];
+
+function VonNeumannVisual() {
+  const steps = [
+    { number: "1", title: "FETCH", detail: "PC gửi địa chỉ, bộ nhớ trả về lệnh" },
+    { number: "2", title: "DECODE", detail: "Control Unit giải mã lệnh ADD" },
+    { number: "3", title: "EXECUTE", detail: "ALU thực hiện phép cộng 2 + 3" },
+    { number: "4", title: "STORE", detail: "Kết quả 5 được ghi lại" },
+  ];
+
+  return (
+    <section className="overflow-hidden rounded-2xl bg-slate-950 p-5 text-white shadow-xl sm:p-8">
+      <div className="flex flex-wrap items-start justify-between gap-3">
+        <div><span className="mono text-[10px] font-bold tracking-[.18em] text-cyan-300">MÔ HÌNH VON NEUMANN</span><h2 className="mt-2 text-xl font-black sm:text-2xl">Lệnh và dữ liệu cùng nằm trong bộ nhớ</h2></div>
+        <span className="rounded-full border border-cyan-400/30 bg-cyan-400/10 px-3 py-1 text-[10px] text-cyan-200">CPU ⇄ BUS ⇄ MEMORY / I/O</span>
+      </div>
+
+      <div className="mt-7 grid items-stretch gap-4 lg:grid-cols-[1fr_190px_1fr]">
+        <div className="rounded-2xl border border-cyan-400/40 bg-cyan-400/10 p-5">
+          <div className="flex items-center gap-3"><span className="grid h-10 w-10 place-items-center rounded-xl bg-cyan-300 text-slate-950"><Cpu size={21}/></span><div><small className="mono text-[9px] text-cyan-300">BỘ XỬ LÝ</small><h3 className="font-black">CPU</h3></div></div>
+          <div className="mt-5 grid gap-2 text-xs sm:grid-cols-3 lg:grid-cols-1 xl:grid-cols-3"><span className="rounded-lg bg-slate-950/55 p-3"><b className="block text-cyan-200">Control Unit</b><small className="text-slate-400">Điều khiển</small></span><span className="rounded-lg bg-slate-950/55 p-3"><b className="block text-cyan-200">ALU</b><small className="text-slate-400">Tính toán</small></span><span className="rounded-lg bg-slate-950/55 p-3"><b className="block text-cyan-200">Registers</b><small className="text-slate-400">Lưu tạm</small></span></div>
+        </div>
+
+        <div className="rounded-2xl border border-blue-400/30 bg-blue-400/5 p-4">
+          <div className="flex items-center justify-center gap-2 text-blue-200"><ArrowLeftRight size={17}/><b className="mono text-xs">SYSTEM BUS</b></div>
+          <div className="mt-4 space-y-3 text-[10px]">
+            <div className="rounded-lg border border-blue-400/25 bg-blue-400/10 p-3"><b className="text-blue-200">ADDRESS BUS →</b><span className="mt-1 block text-slate-400">CPU chọn địa chỉ cần đọc/ghi</span></div>
+            <div className="rounded-lg border border-cyan-400/25 bg-cyan-400/10 p-3"><b className="text-cyan-200">← DATA BUS →</b><span className="mt-1 block text-slate-400">Mang lệnh và dữ liệu hai chiều</span></div>
+            <div className="rounded-lg border border-violet-400/25 bg-violet-400/10 p-3"><b className="text-violet-200">← CONTROL →</b><span className="mt-1 block text-slate-400">Tín hiệu đọc, ghi và ngắt</span></div>
+          </div>
+        </div>
+
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-1">
+          <div className="rounded-2xl border border-violet-400/40 bg-violet-400/10 p-5">
+            <div className="flex items-center gap-3"><Database size={20} className="text-violet-300"/><div><small className="mono text-[9px] text-violet-300">BỘ NHỚ CHUNG</small><h3 className="font-black">MEMORY</h3></div></div>
+            <div className="mt-4 grid grid-cols-2 gap-2 text-[10px]"><span className="rounded-lg bg-slate-950/55 p-3"><b className="block text-violet-200">LỆNH</b><span className="text-slate-400">ADD A, B</span></span><span className="rounded-lg bg-slate-950/55 p-3"><b className="block text-violet-200">DỮ LIỆU</b><span className="text-slate-400">A=2 · B=3</span></span></div>
+          </div>
+          <div className="rounded-2xl border border-amber-400/35 bg-amber-400/10 p-5">
+            <div className="flex items-center gap-3"><Keyboard size={20} className="text-amber-300"/><div><small className="mono text-[9px] text-amber-300">VÀO / RA</small><h3 className="font-black">I/O DEVICES</h3></div></div>
+            <p className="mt-3 text-xs leading-5 text-slate-400">Bàn phím · màn hình · ổ đĩa · mạng</p>
+          </div>
+        </div>
+      </div>
+
+      <div className="mt-6 border-t border-slate-800 pt-5"><p className="mb-3 text-xs font-bold text-slate-300">Ví dụ luồng thực hiện phép tính 2 + 3</p><div className="grid gap-2 sm:grid-cols-2 xl:grid-cols-4">{steps.map(step => <div key={step.number} className="flex gap-3 rounded-xl bg-slate-900 p-3"><span className="mono grid h-7 w-7 shrink-0 place-items-center rounded-full bg-cyan-300 text-[10px] font-black text-slate-950">{step.number}</span><div><b className="mono text-[10px] text-cyan-200">{step.title}</b><p className="mt-1 text-[10px] leading-4 text-slate-400">{step.detail}</p></div></div>)}</div></div>
+    </section>
+  );
+}
 
 function ArchitectureVisual({ content }: { content: ChapterLessonContent }) {
   return (
@@ -47,7 +98,7 @@ function SectionContent({ active, chapter }: { active: SectionId; chapter: Chapt
           <div className="flex items-center gap-2"><Target size={18} className="text-blue-500" /><h2 className="font-black">Học xong chương này, bạn có thể</h2></div>
           <div className="mt-4 grid gap-3 sm:grid-cols-3">{content.objectives.map((objective, index) => <div key={objective} className="flex gap-3 rounded-xl bg-soft p-4"><span className="mono grid h-6 w-6 shrink-0 place-items-center rounded-full bg-blue-500 text-[10px] font-bold text-white">{index + 1}</span><p className="text-xs font-semibold leading-5">{objective}</p></div>)}</div>
         </section>
-        <ArchitectureVisual content={content} />
+        {chapter.slug === "tong-quan" ? <VonNeumannVisual /> : <ArchitectureVisual content={content} />}
         <section className="prose-area">
           {content.sections.map(section => <div key={section.title}><h2>{section.title}</h2><p>{section.body}</p>{section.points && <ul className="mt-4 space-y-2">{section.points.map(point => <li key={point} className="flex gap-3 text-sm text-muted"><CheckCircle2 size={16} className="mt-1 shrink-0 text-cyan-500" /><span>{point}</span></li>)}</ul>}</div>)}
           <div className="note"><Lightbulb className="shrink-0" /><div><strong>Điểm cần nhớ</strong><p>{content.takeaway}</p></div></div>
