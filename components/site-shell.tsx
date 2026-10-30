@@ -216,14 +216,6 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
                       <span>Thông tin tài khoản</span>
                     </Link>
                     <Link
-                      href="/feedback"
-                      onClick={() => setAccountMenu(false)}
-                      className="mobile-link"
-                    >
-                      <MessageSquareText size={17} />
-                      <span>Góp ý & phản hồi</span>
-                    </Link>
-                    <Link
                       href={
                         user.mustChangePassword
                           ? "/change-password"
