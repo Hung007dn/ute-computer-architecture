@@ -17,5 +17,5 @@ export async function POST(request: Request) {
   if (!user?.passwordHash || !user.passwordSalt || !(await verifyPassword(currentPassword, user.passwordSalt, user.passwordHash))) return NextResponse.json({ error: "Mật khẩu hiện tại không đúng." }, { status: 401 });
   const password = await hashPassword(newPassword);
   await getDb().update(users).set({ passwordHash: password.hash, passwordSalt: password.salt, mustChangePassword: false, updatedAt: new Date() }).where(eq(users.id, user.id));
-  return NextResponse.json({ ok: true });
+  return NextResponse.json({ ok: true, role: user.role });
 }

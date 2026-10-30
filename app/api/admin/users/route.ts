@@ -1,24 +1,24 @@
-import { env } from "cloudflare:workers";
 import { desc, eq } from "drizzle-orm";
 import { NextResponse } from "next/server";
 import { getDb } from "@/db";
 import { users } from "@/db/schema";
-import { DEFAULT_STUDENT_PASSWORD, hashPassword, isStudentEmail, normalizeStudentEmail } from "@/lib/student-auth";
+import { DEFAULT_STUDENT_PASSWORD, getCurrentUser, hashPassword, isStudentEmail, normalizeStudentEmail } from "@/lib/student-auth";
 
 export const dynamic = "force-dynamic";
 
-function authorized(request: Request) {
-  return Boolean(env.ADMIN_UPLOAD_KEY && request.headers.get("x-admin-key") === env.ADMIN_UPLOAD_KEY);
+async function authorized() {
+  const user = await getCurrentUser();
+  return Boolean(user && user.role === "ADMIN" && !user.mustChangePassword);
 }
 
-export async function GET(request: Request) {
-  if (!authorized(request)) return NextResponse.json({ error: "Mật khẩu quản trị không đúng." }, { status: 401 });
+export async function GET() {
+  if (!(await authorized())) return NextResponse.json({ error: "Bạn không có quyền quản trị." }, { status: 403 });
   const rows = await getDb().select({ id: users.id, email: users.email, name: users.name, role: users.role, status: users.status, mustChangePassword: users.mustChangePassword, lastLoginAt: users.lastLoginAt, createdAt: users.createdAt }).from(users).orderBy(desc(users.createdAt));
   return NextResponse.json({ users: rows }, { headers: { "Cache-Control": "no-store, max-age=0" } });
 }
 
 export async function POST(request: Request) {
-  if (!authorized(request)) return NextResponse.json({ error: "Mật khẩu quản trị không đúng." }, { status: 401 });
+  if (!(await authorized())) return NextResponse.json({ error: "Bạn không có quyền quản trị." }, { status: 403 });
   const body = await request.json().catch(() => null) as { email?: string; name?: string } | null;
   const email = normalizeStudentEmail(body?.email || "");
   const name = body?.name?.trim().slice(0, 100) || null;
@@ -36,9 +36,14 @@ export async function POST(request: Request) {
 }
 
 export async function PATCH(request: Request) {
-  if (!authorized(request)) return NextResponse.json({ error: "Mật khẩu quản trị không đúng." }, { status: 401 });
+  const admin = await getCurrentUser();
+  if (!admin || admin.role !== "ADMIN" || admin.mustChangePassword) return NextResponse.json({ error: "Bạn không có quyền quản trị." }, { status: 403 });
   const body = await request.json().catch(() => null) as { id?: string; action?: "RESET_PASSWORD" | "BLOCK" | "UNBLOCK" } | null;
   if (!body?.id || !body.action) return NextResponse.json({ error: "Yêu cầu không hợp lệ." }, { status: 400 });
+  if (body.id === admin.id) return NextResponse.json({ error: "Không thể khóa hoặc đặt lại chính tài khoản Admin đang sử dụng." }, { status: 400 });
+  const [target] = await getDb().select({ role: users.role }).from(users).where(eq(users.id, body.id)).limit(1);
+  if (!target) return NextResponse.json({ error: "Không tìm thấy tài khoản." }, { status: 404 });
+  if (target.role === "ADMIN") return NextResponse.json({ error: "Không thể thay đổi tài khoản Admin tại đây." }, { status: 400 });
   if (body.action === "RESET_PASSWORD") {
     const password = await hashPassword(DEFAULT_STUDENT_PASSWORD);
     await getDb().update(users).set({ passwordHash: password.hash, passwordSalt: password.salt, mustChangePassword: true, updatedAt: new Date() }).where(eq(users.id, body.id));
