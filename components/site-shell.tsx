@@ -37,6 +37,7 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const [dark, setDark] = useState(false);
   const [menu, setMenu] = useState(false);
+  const [accountMenu, setAccountMenu] = useState(false);
   const [search, setSearch] = useState(false);
   const [query, setQuery] = useState("");
   const [user, setUser] = useState<{
@@ -62,6 +63,7 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
       if (event.key === "Escape") {
         setSearch(false);
         setMenu(false);
+        setAccountMenu(false);
       }
     };
     window.addEventListener("keydown", handler);
@@ -69,6 +71,7 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
   }, []);
   useEffect(() => {
     setMenu(false);
+    setAccountMenu(false);
   }, [pathname]);
   useEffect(() => {
     if (!menu) return;
@@ -176,29 +179,48 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
               {dark ? <Sun size={18} /> : <Moon size={18} />}
             </button>
             {user ? (
-              <>
-                <Link
-                  href={
-                    user.mustChangePassword
-                      ? "/change-password"
-                      : user.role === "ADMIN"
-                        ? "/admin"
-                        : "/dashboard"
-                  }
+              <div className="relative">
+                <button
+                  type="button"
                   className="avatar"
                   title={user.email}
-                  aria-label="Mở tài khoản"
+                  aria-label="Mở menu tài khoản"
+                  aria-expanded={accountMenu}
+                  aria-controls="account-navigation"
+                  onClick={() => setAccountMenu((current) => !current)}
                 >
                   {(user.name || user.email).slice(0, 2).toUpperCase()}
-                </Link>
-                <button
-                  className="square-button hidden sm:flex"
-                  onClick={logout}
-                  aria-label="Đăng xuất"
-                >
-                  <LogOut size={17} />
                 </button>
-              </>
+                {accountMenu && (
+                  <div
+                    id="account-navigation"
+                    className="absolute right-0 top-[calc(100%+10px)] z-[70] w-64 overflow-hidden rounded-2xl border border-border bg-surface p-2 shadow-2xl"
+                  >
+                    <div className="border-b border-border px-3 py-3">
+                      <strong className="block truncate text-sm">{user.name || "Tài khoản"}</strong>
+                      <span className="mt-1 block truncate text-xs text-muted">{user.email}</span>
+                    </div>
+                    <Link
+                      href={
+                        user.mustChangePassword
+                          ? "/change-password"
+                          : user.role === "ADMIN"
+                            ? "/admin"
+                            : "/dashboard"
+                      }
+                      onClick={() => setAccountMenu(false)}
+                      className="mobile-link mt-1"
+                    >
+                      <LayoutDashboard size={17} />
+                      <span>{user.role === "ADMIN" ? "Trang quản trị" : "Dashboard"}</span>
+                    </Link>
+                    <button type="button" onClick={logout} className="mobile-link w-full text-rose-500">
+                      <LogOut size={17} />
+                      <span>Đăng xuất</span>
+                    </button>
+                  </div>
+                )}
+              </div>
             ) : (
               <Link
                 href="/login"
