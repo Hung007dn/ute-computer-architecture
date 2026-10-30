@@ -1,3 +1,5 @@
+import { chapterContents, chapterExamples } from "@/data/lesson-content";
+
 export type Chapter = {
   id: number;
   slug: string;
@@ -34,7 +36,7 @@ export type Question = {
   tags: string[];
 };
 
-export const questions: Question[] = [
+const manualQuestions: Question[] = [
   { id: 1, chapterId: 2, prompt: "101101₂ bằng bao nhiêu trong hệ thập phân?", options: ["41", "43", "45", "47"], answer: 2, explanation: "1×2⁵ + 1×2³ + 1×2² + 1×2⁰ = 32 + 8 + 4 + 1 = 45.", difficulty: "Dễ", tags: ["hệ đếm", "nhị phân"] },
   { id: 2, chapterId: 4, prompt: "Số bù 2 của −15 trong hệ 8 bit là?", options: ["00001111", "11110000", "11110001", "10001111"], answer: 2, explanation: "15 = 00001111. Đảo bit được 11110000, cộng 1 được 11110001.", difficulty: "Trung bình", tags: ["bù hai"] },
   { id: 3, chapterId: 5, prompt: "Giai đoạn nào giải mã opcode và toán hạng?", options: ["Fetch", "Decode", "Execute", "Write-back"], answer: 1, explanation: "Decode sử dụng Control Unit để xác định thao tác và nguồn toán hạng.", difficulty: "Dễ", tags: ["chu kỳ lệnh"] },
@@ -66,6 +68,53 @@ export const questions: Question[] = [
   { id: 29, chapterId: 10, prompt: "Thanh ghi RAX thường được dùng cho mục đích nào trong x86-64?", options: ["Stack pointer", "Giá trị trả về và tích lũy", "Instruction pointer", "Frame pointer"], answer: 1, explanation: "Theo ABI phổ biến, RAX chứa giá trị trả về của hàm.", difficulty: "Dễ", tags: ["assembly"] },
   { id: 30, chapterId: 1, prompt: "Firmware thường được lưu trong loại bộ nhớ nào?", options: ["SRAM cache", "ROM/Flash", "Thanh ghi CPU", "Virtual memory"], answer: 1, explanation: "Firmware cần tồn tại khi mất điện nên thường nằm trong ROM hoặc Flash.", difficulty: "Dễ", tags: ["firmware", "ROM"] },
 ];
+
+type QuestionSpec = Omit<Question, "id" | "chapterId" | "options" | "answer"> & { correct: string; distractors: string[] };
+
+function makeOptions(correct: string, distractors: string[], seed: number) {
+  const unique = [...new Set([correct, ...distractors])].slice(0, 4);
+  while (unique.length < 4) unique.push(`Phương án không phù hợp ${unique.length}`);
+  const shift = seed % unique.length;
+  const options = [...unique.slice(shift), ...unique.slice(0, shift)];
+  return { options, answer: options.indexOf(correct) };
+}
+
+const generatedQuestions: Question[] = chapters.flatMap((chapter) => {
+  const content = chapterContents[chapter.slug];
+  const examples = chapterExamples[chapter.slug];
+  const peers = chapters.filter((item) => item.id !== chapter.id);
+  const peerContents = peers.map((item) => chapterContents[item.slug]);
+  const peerExamples = peers.map((item) => chapterExamples[item.slug]);
+  const specs: QuestionSpec[] = [];
+  const levels: Question["difficulty"][] = ["Dễ", "Trung bình", "Khó"];
+
+  content.objectives.forEach((correct, index) => specs.push({ prompt: `Mục tiêu nào thuộc Chương ${chapter.id}: ${chapter.title}?`, correct, distractors: peerContents.map((item) => item.objectives[index % item.objectives.length]), explanation: `“${correct}” là một mục tiêu học tập của chương này.`, difficulty: levels[index % 3], tags: ["mục tiêu học tập"] }));
+  content.sections.forEach((section, index) => specs.push({ prompt: `Nội dung nào được học trong Chương ${chapter.id}?`, correct: section.title, distractors: peerContents.map((item) => item.sections[index % item.sections.length].title), explanation: `“${section.title}” là một phần lý thuyết trọng tâm của chương.`, difficulty: levels[(index + 1) % 3], tags: ["khái niệm"] }));
+  examples.forEach((example, index) => specs.push({ prompt: `Ví dụ thực tế nào minh họa kiến thức của Chương ${chapter.id}?`, correct: example.title, distractors: peerExamples.map((item) => item[index % item.length].title), explanation: example.body, difficulty: levels[(index + 2) % 3], tags: ["ví dụ thực tế"] }));
+  content.mistakes.forEach((correct, index) => specs.push({ prompt: `Lỗi nào cần tránh khi học Chương ${chapter.id}?`, correct, distractors: peerContents.map((item) => item.mistakes[index % item.mistakes.length]), explanation: `Đây là lỗi thường gặp trong phần ${chapter.title.toLowerCase()}.`, difficulty: levels[index % 3], tags: ["lỗi thường gặp"] }));
+  content.formulas.forEach((formula, index) => {
+    specs.push({ prompt: `Biểu thức nào đúng với “${formula.label}”?`, correct: formula.expression, distractors: peerContents.map((item) => item.formulas[index % item.formulas.length].expression), explanation: formula.explanation, difficulty: levels[(index + 1) % 3], tags: ["công thức"] });
+    specs.push({ prompt: `Ý nghĩa phù hợp nhất của công thức “${formula.expression}” là gì?`, correct: formula.explanation, distractors: peerContents.map((item) => item.formulas[index % item.formulas.length].explanation), explanation: formula.explanation, difficulty: levels[(index + 2) % 3], tags: ["công thức"] });
+  });
+  content.diagram.forEach((item, index) => {
+    specs.push({ prompt: `Khối nào xuất hiện trong sơ đồ của Chương ${chapter.id}?`, correct: item.label, distractors: peerContents.map((peer) => peer.diagram[index % peer.diagram.length].label), explanation: `${item.label}: ${item.detail}.`, difficulty: levels[index % 3], tags: ["sơ đồ"] });
+    specs.push({ prompt: `Mô tả nào đúng với khối ${item.label}?`, correct: item.detail, distractors: peerContents.map((peer) => peer.diagram[index % peer.diagram.length].detail), explanation: `${item.label} được mô tả là “${item.detail}”.`, difficulty: levels[(index + 1) % 3], tags: ["sơ đồ"] });
+  });
+  content.example.steps.slice(0, 3).forEach((correct, index) => specs.push({ prompt: `Bước nào thuộc ví dụ tính toán của Chương ${chapter.id}?`, correct, distractors: peerContents.map((item) => item.example.steps[index % item.example.steps.length]), explanation: `Đây là bước ${index + 1} trong lời giải mẫu của chương.`, difficulty: levels[(index + 2) % 3], tags: ["bài mẫu"] }));
+  specs.push({ prompt: `Đề bài mẫu nào thuộc Chương ${chapter.id}?`, correct: content.example.problem, distractors: peerContents.map((item) => item.example.problem), explanation: content.example.result, difficulty: "Trung bình", tags: ["bài mẫu"] });
+  specs.push({ prompt: `Kết luận nào đúng cho bài mẫu của Chương ${chapter.id}?`, correct: content.example.result, distractors: peerContents.map((item) => item.example.result), explanation: content.example.result, difficulty: "Khó", tags: ["bài mẫu"] });
+  specs.push({ prompt: `Điểm cần nhớ nào thuộc Chương ${chapter.id}?`, correct: content.takeaway, distractors: peerContents.map((item) => item.takeaway), explanation: content.takeaway, difficulty: "Trung bình", tags: ["ghi nhớ"] });
+  specs.push({ prompt: `Mô tả nào đúng nhất về Chương ${chapter.id}?`, correct: chapter.description, distractors: peers.map((item) => item.description), explanation: chapter.description, difficulty: "Dễ", tags: ["tổng quan"] });
+  specs.push({ prompt: `Mô tả nào phù hợp với nội dung “${content.sections[0].title}”?`, correct: content.sections[0].body, distractors: peerContents.map((item) => item.sections[0].body), explanation: content.sections[0].body, difficulty: "Khó", tags: ["hiểu bản chất"] });
+
+  return specs.slice(0, 30).map((spec, index) => {
+    const { correct, distractors, ...rest } = spec;
+    const { options, answer } = makeOptions(correct, distractors, chapter.id * 31 + index);
+    return { id: 1000 + chapter.id * 100 + index, chapterId: chapter.id, options, answer, ...rest };
+  });
+});
+
+export const questions: Question[] = [...manualQuestions, ...generatedQuestions];
 
 export const dashboardStats = {
   progress: 58,
