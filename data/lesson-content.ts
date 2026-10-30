@@ -51,7 +51,7 @@ export const chapterContents: Record<string, ChapterLessonContent> = {
     sections: [
       { title: "Giá trị theo vị trí", body: "Trong hệ cơ số b, mỗi chữ số có trọng số là một lũy thừa của b. Bên trái dấu chấm dùng b⁰, b¹, b²…; bên phải dùng b⁻¹, b⁻²… Vì vậy cùng chuỗi chữ số nhưng khác cơ số sẽ có giá trị khác nhau." },
       { title: "Chuyển đổi có hệ thống", body: "Từ cơ số bất kỳ sang thập phân, nhân từng chữ số với trọng số rồi cộng. Từ thập phân sang cơ số b, chia liên tiếp phần nguyên cho b và đọc số dư từ dưới lên; phần lẻ được nhân liên tiếp với b.", points: ["Nhị phân ↔ bát phân: nhóm 3 bit.", "Nhị phân ↔ thập lục phân: nhóm 4 bit.", "Thêm số 0 ở phía ngoài cùng khi nhóm chưa đủ bit."] },
-      { title: "Phép toán nhị phân", body: "Cộng nhị phân tuân theo các quy tắc 0+0=0, 0+1=1, 1+1=10 và 1+1+1=11. Phép trừ có thể mượn hoặc chuyển thành phép cộng số bù hai ở chương sau." },
+      { title: "Phép toán nhị phân", body: "Cộng nhị phân tuân theo các quy tắc: 0₂ + 0₂ = 0₂; 0₂ + 1₂ = 1₂; 1₂ + 1₂ = 10₂ (viết 0, nhớ 1); và 1₂ + 1₂ + 1₂ = 11₂ (viết 1, nhớ 1). Chỉ số ₂ cho biết các kết quả 10 và 11 đang được viết trong hệ nhị phân. Phép trừ có thể thực hiện bằng cách mượn hoặc chuyển thành phép cộng số bù hai ở chương sau." },
     ],
     takeaway: "Hex là cách viết gọn của nhị phân: mỗi chữ số hex tương ứng đúng 4 bit, nên rất hữu ích khi đọc địa chỉ và mã máy.",
     mistakes: ["Đọc số dư theo thứ tự từ trên xuống", "Quên ghi cơ số của kết quả", "Nhóm bit từ bên trái thay vì bắt đầu tại dấu chấm"],
