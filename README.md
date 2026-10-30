@@ -6,6 +6,10 @@ UTE Computer Architecture là website hỗ trợ sinh viên HCMUTE học tập v
 
 Website tổng hợp bài học, bài tập, đề thi thử, video và tài liệu học tập trong một hệ thống thống nhất. Nội dung được trình bày theo từng chương, kèm ví dụ thực tế để người học dễ hiểu và dễ ôn tập hơn.
 
+## Truy cập website
+
+**[Mở UTE Computer Architecture](https://ute-computer-architecture.hung007dn.workers.dev)**
+
 ## Chức năng chính
 
 - Đăng nhập bằng tài khoản sinh viên HCMUTE.
@@ -22,7 +26,3 @@ Website tổng hợp bài học, bài tập, đề thi thử, video và tài li�
 - Các công cụ chuyển đổi hệ đếm, số bù hai, IEEE 754 và tính hiệu năng CPU.
 - Tìm kiếm nội dung trên toàn website.
 - Giao diện responsive, hỗ trợ chế độ sáng và tối.
-
-## Truy cập website
-
-**[Mở UTE Computer Architecture](https://ute-computer-architecture.hung007dn.workers.dev)**
