@@ -11,7 +11,7 @@ Web vẫn đang trong quá trình cải thiện nên nếu có vấn đề gì m
 Xin cảm ơn mọi người!
 ## Truy cập website
 
-**[Mở UTE Computer Architecture](https://ute-computer-architecture.hung007dn.workers.dev)**
+**[Mở UTE Computer Architecture](https://hcmute-computer-architecture.hung007dn.workers.dev)**
 
 ## Chức năng chính
 
