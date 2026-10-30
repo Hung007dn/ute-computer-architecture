@@ -3,6 +3,7 @@ import { desc, eq } from "drizzle-orm";
 import { NextResponse } from "next/server";
 import { getDb } from "@/db";
 import { documents } from "@/db/schema";
+import { getCurrentUser } from "@/lib/student-auth";
 
 const MAX_FILE_SIZE = 20 * 1024 * 1024;
 const allowedTypes = new Map([
@@ -16,6 +17,8 @@ function safeFileName(value: string) {
 }
 
 export async function GET() {
+  const user = await getCurrentUser();
+  if (!user || user.mustChangePassword) return NextResponse.json({ error: "UNAUTHORIZED" }, { status: 401 });
   const db = getDb();
   const rows = await db.select({
     id: documents.id,

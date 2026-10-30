@@ -3,10 +3,13 @@ import { and, eq } from "drizzle-orm";
 import { NextResponse } from "next/server";
 import { getDb } from "@/db";
 import { documents } from "@/db/schema";
+import { getCurrentUser } from "@/lib/student-auth";
 
 type DocumentMetadata = { originalName?: string; contentType?: string };
 
 export async function GET(_request: Request, { params }: { params: Promise<{ id: string }> }) {
+  const user = await getCurrentUser();
+  if (!user || user.mustChangePassword) return NextResponse.json({ error: "UNAUTHORIZED" }, { status: 401 });
   if (!env.DOCUMENTS) return NextResponse.json({ error: "Kho lưu trữ chưa được cấu hình." }, { status: 503 });
 
   const { id } = await params;
