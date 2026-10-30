@@ -8,8 +8,8 @@ Website tổng hợp bài học, bài tập, đề thi thử, video và tài li�
 
 ## Chức năng chính
 
-- Hệ thống đăng nhập chung dành cho sinh viên và quản trị viên.
-- Quản lý thông tin tài khoản và chủ động đổi mật khẩu.
+- Đăng nhập bằng tài khoản sinh viên HCMUTE.
+- Xem thông tin tài khoản và chủ động đổi mật khẩu.
 - Nội dung học tập gồm 10 chương về kiến trúc máy tính và hợp ngữ.
 - Bài học được chia thành các phần khái niệm, công thức, ví dụ, video và quiz.
 - Luyện tập một hoặc nhiều chương với số lượng từ 15 đến 30 câu.
@@ -22,7 +22,6 @@ Website tổng hợp bài học, bài tập, đề thi thử, video và tài li�
 - Các công cụ chuyển đổi hệ đếm, số bù hai, IEEE 754 và tính hiệu năng CPU.
 - Tìm kiếm nội dung trên toàn website.
 - Giao diện responsive, hỗ trợ chế độ sáng và tối.
-- Quản trị viên có thể tạo, khóa, mở khóa, đặt lại mật khẩu và theo dõi lần đăng nhập gần nhất của tài khoản sinh viên.
 
 ## Truy cập website
 
