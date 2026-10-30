@@ -7,6 +7,7 @@ import {
   Video,
 } from "lucide-react";
 import { AccountManager } from "@/components/account-manager";
+import { FeedbackManager } from "@/components/feedback-manager";
 import { chapters, questions, resources, videos } from "@/data/course";
 import { getCurrentUser } from "@/lib/student-auth";
 
@@ -52,6 +53,7 @@ export default async function AdminPage() {
         ))}
       </div>
       <AccountManager />
+      <FeedbackManager />
       <section className="panel mt-5 p-6">
         <h2 className="font-bold">Nội dung gần đây</h2>
         <div className="mt-5 overflow-x-auto">

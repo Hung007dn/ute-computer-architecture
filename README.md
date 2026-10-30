@@ -17,6 +17,7 @@ Xin cảm ơn mọi người!
 
 - Đăng nhập bằng tài khoản sinh viên HCMUTE.
 - Xem thông tin tài khoản và chủ động đổi mật khẩu.
+- Gửi ý kiến, báo lỗi và đề xuất cải thiện trực tiếp đến quản trị viên.
 - Nội dung học tập gồm 10 chương về kiến trúc máy tính và hợp ngữ.
 - Bài học được chia thành các phần khái niệm, công thức, ví dụ, video và quiz.
 - Luyện tập một hoặc nhiều chương với số lượng từ 15 đến 30 câu.

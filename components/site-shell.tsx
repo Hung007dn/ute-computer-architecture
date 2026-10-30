@@ -14,6 +14,7 @@ import {
   LogIn,
   LogOut,
   Menu,
+  MessageSquareText,
   Moon,
   Search,
   Sun,
@@ -198,8 +199,12 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
                     className="absolute right-0 top-[calc(100%+10px)] z-[70] w-64 overflow-hidden rounded-2xl border border-border bg-surface p-2 shadow-2xl"
                   >
                     <div className="border-b border-border px-3 py-3">
-                      <strong className="block truncate text-sm">{user.name || "Tài khoản"}</strong>
-                      <span className="mt-1 block truncate text-xs text-muted">{user.email}</span>
+                      <strong className="block truncate text-sm">
+                        {user.name || "Tài khoản"}
+                      </strong>
+                      <span className="mt-1 block truncate text-xs text-muted">
+                        {user.email}
+                      </span>
                     </div>
                     <Link
                       href="/account"
@@ -208,6 +213,14 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
                     >
                       <UserRound size={17} />
                       <span>Thông tin tài khoản</span>
+                    </Link>
+                    <Link
+                      href="/feedback"
+                      onClick={() => setAccountMenu(false)}
+                      className="mobile-link"
+                    >
+                      <MessageSquareText size={17} />
+                      <span>Góp ý & phản hồi</span>
                     </Link>
                     <Link
                       href={
@@ -221,9 +234,15 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
                       className="mobile-link"
                     >
                       <LayoutDashboard size={17} />
-                      <span>{user.role === "ADMIN" ? "Trang quản trị" : "Dashboard"}</span>
+                      <span>
+                        {user.role === "ADMIN" ? "Trang quản trị" : "Dashboard"}
+                      </span>
                     </Link>
-                    <button type="button" onClick={logout} className="mobile-link w-full text-rose-500">
+                    <button
+                      type="button"
+                      onClick={logout}
+                      className="mobile-link w-full text-rose-500"
+                    >
                       <LogOut size={17} />
                       <span>Đăng xuất</span>
                     </button>
@@ -313,7 +332,22 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
                 <ChevronRight className="ml-auto" size={16} />
               </Link>
               {user && (
-                <button type="button" onClick={logout} className="mobile-link w-full">
+                <Link
+                  href="/feedback"
+                  onClick={() => setMenu(false)}
+                  className="mobile-link"
+                >
+                  <MessageSquareText size={18} />
+                  <span>Góp ý & phản hồi</span>
+                  <ChevronRight className="ml-auto" size={16} />
+                </Link>
+              )}
+              {user && (
+                <button
+                  type="button"
+                  onClick={logout}
+                  className="mobile-link w-full"
+                >
                   <LogOut size={18} />
                   <span>Đăng xuất</span>
                 </button>
@@ -405,6 +439,7 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
             <Link href="/learn">10 chương học</Link>
             <Link href="/practice">Quiz theo chương</Link>
             <Link href="/exam">Đề thi thử</Link>
+            <Link href="/feedback">Góp ý & phản hồi</Link>
           </div>
           <div>
             <strong className="footer-title">Công cụ</strong>
