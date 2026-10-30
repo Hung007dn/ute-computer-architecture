@@ -20,6 +20,61 @@ export type ChapterLessonContent = {
   example: { problem: string; steps: string[]; result: string };
 };
 
+export type RealWorldExample = { title: string; body: string };
+
+export const chapterExamples: Record<string, RealWorldExample[]> = {
+  "tong-quan": [
+    { title: "Hai điện thoại cùng chạy Android", body: "Hai điện thoại có thể cùng dùng kiến trúc ARM và chạy cùng ứng dụng, nhưng máy có cache lớn hoặc nhiều đơn vị xử lý hơn sẽ nhanh hơn. ARM là phần kiến trúc; cách bố trí cache và lõi là phần tổ chức." },
+    { title: "Ứng dụng máy tính thực hiện 2 + 3", body: "Khi bạn bấm 2 + 3, bộ nhớ chứa cả lệnh cộng và dữ liệu 2, 3. CPU lấy lệnh, giải mã, dùng ALU tính ra 5 rồi gửi kết quả đến màn hình. Đây chính là cách mô hình Von Neumann vận hành." },
+    { title: "Từ dòng code đến bóng bán dẫn", body: "Một câu lệnh như total = a + b được trình biên dịch đổi thành lệnh máy, ISA quy định ý nghĩa lệnh ADD, vi kiến trúc chọn đường đi qua ALU và cuối cùng mạch điện đóng/mở để tạo kết quả." },
+  ],
+  "he-dem": [
+    { title: "Giá trị 352 trong đời thường", body: "Chữ số 3 có giá trị 300 vì đứng ở hàng trăm, 5 có giá trị 50 và 2 có giá trị 2. Hệ nhị phân cũng theo quy tắc vị trí này, chỉ khác là trọng số lần lượt là 1, 2, 4, 8, 16…" },
+    { title: "Mã màu trên website", body: "Màu #FF6600 dùng hệ 16: FF là mức đỏ 255, 66 là mức xanh lá 102 và 00 là mức xanh dương 0. Hex giúp viết 24 bit màu ngắn gọn hơn một chuỗi nhị phân dài." },
+    { title: "CPU cộng điểm trong trò chơi", body: "Nếu điểm hiện tại là 1011₂ (11) và nhận thêm 0110₂ (6), CPU cộng từng cột nhị phân để được 10001₂ (17). Bit nhớ hoạt động giống phép cộng thập phân mà bạn đã học." },
+  ],
+  "bieu-dien-du-lieu": [
+    { title: "Một byte, nhiều ý nghĩa", body: "Chuỗi 01000001₂ có thể là số 65, ký tự 'A' trong ASCII hoặc cường độ màu 65. Phần mềm phải biết kiểu dữ liệu mới diễn giải đúng cùng tám bit đó." },
+    { title: "Tin nhắn tiếng Việt", body: "Chữ 'A' chiếm 1 byte trong UTF-8, nhưng ký tự 'ă' cần 2 byte. Vì vậy độ dài chuỗi theo ký tự và dung lượng theo byte có thể khác nhau." },
+    { title: "Vì sao 0,1 + 0,2 không luôn đúng bằng 0,3", body: "Một số thập phân không có biểu diễn nhị phân hữu hạn. Máy phải làm tròn chúng khi lưu bằng IEEE 754, nên phép tính có thể cho kết quả gần 0,30000000000000004." },
+  ],
+  "so-co-dau": [
+    { title: "Nhiệt độ âm trong cảm biến", body: "Cảm biến 8 bit có thể gửi −18°C dưới dạng bù hai 11101110₂. Thiết bị nhận chỉ cần giải mã đúng quy ước bù hai để hiển thị nhiệt độ âm." },
+    { title: "Đọc một byte 11111111₂", body: "Nếu đọc không dấu, byte này là 255. Nếu đọc theo bù hai có dấu, nó là −1. Mẫu bit không đổi; kiểu dữ liệu quyết định giá trị." },
+    { title: "Đồng hồ công-tơ-mét bị quay vòng", body: "Giống bộ đếm chỉ có ba chữ số chuyển từ 999 về 000, số có dấu 8 bit chuyển từ 127 sang −128 khi cộng thêm 1. Đó là overflow vì kết quả thật vượt miền biểu diễn." },
+  ],
+  "cpu-tap-lenh": [
+    { title: "Tính tổng trong ứng dụng", body: "Câu lệnh bậc cao total = a + b có thể trở thành ba lệnh máy: LOAD a, ADD b và STORE total. CPU xử lý từng lệnh bằng chu kỳ nạp, giải mã và thực thi." },
+    { title: "Ứng dụng và loại CPU", body: "Một ứng dụng được biên dịch cho x86-64 không thể tự chạy trực tiếp trên CPU ARM nếu không có bản biên dịch phù hợp hoặc lớp dịch. ISA giống ngôn ngữ chung giữa phần mềm và CPU." },
+    { title: "Truy cập phần tử mảng", body: "Với mảng số nguyên 4 byte, địa chỉ scores[3] được tính bằng địa chỉ đầu mảng + 3 × 4. Đây là kiểu định địa chỉ base + index × scale thường gặp." },
+  ],
+  "datapath": [
+    { title: "Bàn làm việc của CPU", body: "Thanh ghi giống các ô nhỏ ngay trên bàn làm việc, ALU giống máy tính cầm tay và bộ nhớ giống tủ hồ sơ ở xa. Datapath là các đường đưa giấy tờ giữa những vị trí đó." },
+    { title: "PC giống dấu trang", body: "Khi đọc sách, dấu trang cho biết trang tiếp theo. Tương tự, PC giữ địa chỉ lệnh tiếp theo; IR giống phần câu đang được đọc và xử lý ngay lúc này." },
+    { title: "Điều khiển lệnh LOAD", body: "Để thực hiện LOAD, Control Unit chọn ALU tính địa chỉ, bật MemRead, chọn dữ liệu từ bộ nhớ và cuối cùng bật RegWrite. Chỉ một tín hiệu sai cũng có thể đưa dữ liệu đến nhầm nơi." },
+  ],
+  "bo-nho-cache": [
+    { title: "Bàn làm việc, tủ hồ sơ và kho", body: "Giấy trên bàn lấy nhanh nhưng chứa ít; tủ gần phòng chứa nhiều hơn nhưng chậm hơn; kho ở xa rất lớn nhưng mất thời gian. Thanh ghi, cache, RAM và ổ đĩa tạo phân cấp tương tự." },
+    { title: "Đọc một mảng liên tiếp", body: "Khi chương trình đọc phần tử array[0], cache mang cả một block chứa các phần tử kế bên. Việc đọc array[1], array[2] sau đó thường nhanh nhờ spatial locality." },
+    { title: "Bãi đỗ xe chia khu", body: "Index giống số khu đỗ xe, way là các chỗ trong khu và tag là biển số xác nhận đúng xe. Direct-mapped chỉ có một chỗ mỗi khu; cache 4-way có bốn lựa chọn." },
+  ],
+  "bus-io": [
+    { title: "Đường cao tốc dữ liệu", body: "Bus dữ liệu 64 bit giống con đường có 64 làn bit đi song song. Bus địa chỉ giống địa chỉ giao hàng, còn bus điều khiển cho biết đây là yêu cầu đọc hay ghi." },
+    { title: "Chờ khách, chuông cửa và đội vận chuyển", body: "Polling giống liên tục mở cửa xem khách tới chưa; interrupt giống chuông cửa báo khi có khách; DMA giống đội vận chuyển tự mang cả lô hàng vào kho mà chủ nhà không phải bê từng món." },
+    { title: "Đọc phím bằng địa chỉ bộ nhớ", body: "Với memory-mapped I/O, CPU đọc một địa chỉ đặc biệt để kiểm tra bàn phím có phím mới hay không, rồi đọc địa chỉ dữ liệu khác để lấy mã phím." },
+  ],
+  "hieu-nang": [
+    { title: "Quầy thanh toán siêu thị", body: "Thời gian một khách hoàn tất thanh toán là latency. Số khách mà các quầy xử lý trong một giờ là throughput. Mở thêm quầy tăng throughput nhưng chưa chắc giảm nhiều thời gian của một khách." },
+    { title: "Hai cách chạy cùng chương trình", body: "Trình biên dịch A tạo ít lệnh hơn nhưng mỗi lệnh phức tạp có CPI cao; trình biên dịch B tạo nhiều lệnh đơn giản với CPI thấp. Chỉ tính IC × CPI / clock rate mới biết cách nào nhanh hơn." },
+    { title: "Rút ngắn quãng đường đi học", body: "Nếu 40% thời gian đi học nằm trên đường cao tốc, dù cao tốc nhanh gấp 10 lần thì 60% thời gian ở đường thường vẫn còn. Đây là giới hạn mà định luật Amdahl mô tả." },
+  ],
+  "assembly": [
+    { title: "Công thức nấu ăn cực kỳ chi tiết", body: "Ngôn ngữ bậc cao giống yêu cầu 'làm bánh', còn Assembly giống các bước lấy bột, cân 200 g, trộn và bật lò. Mỗi bước đơn giản và gần với thao tác phần cứng." },
+    { title: "So sánh điểm để quyết định đậu", body: "CPU dùng CMP score, 5 để cập nhật cờ. Lệnh nhảy có điều kiện đọc các cờ đó và chọn nhánh 'đậu' hoặc 'chưa đạt', giống câu lệnh if trong ngôn ngữ bậc cao." },
+    { title: "Chồng khay trong căn tin", body: "Khay đặt sau cùng nằm trên cùng và được lấy ra trước, giống nguyên tắc LIFO của stack. CALL đặt địa chỉ quay về lên stack; RET lấy nó ra để trở lại đúng chỗ." },
+  ],
+};
+
 export const chapterContents: Record<string, ChapterLessonContent> = {
   "tong-quan": {
     objectives: ["Phân biệt kiến trúc và tổ chức máy tính", "Mô tả mô hình Von Neumann", "Theo dõi hành trình của một lệnh"],

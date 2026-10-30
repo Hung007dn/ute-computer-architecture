@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "@/components/safe-link";
 import type { Chapter } from "@/data/course";
-import { chapterContents, type ChapterLessonContent } from "@/data/lesson-content";
+import { chapterContents, chapterExamples, type ChapterLessonContent } from "@/data/lesson-content";
 import { LessonActions } from "@/components/lesson-actions";
 import {
   AlertTriangle,
@@ -100,7 +100,7 @@ function SectionContent({ active, chapter }: { active: SectionId; chapter: Chapt
         </section>
         {chapter.slug === "tong-quan" ? <VonNeumannVisual /> : <ArchitectureVisual content={content} />}
         <section className="prose-area">
-          {content.sections.map(section => <div key={section.title}><h2>{section.title}</h2><p>{section.body}</p>{section.points && <ul className="mt-4 space-y-2">{section.points.map(point => <li key={point} className="flex gap-3 text-sm text-muted"><CheckCircle2 size={16} className="mt-1 shrink-0 text-cyan-500" /><span>{point}</span></li>)}</ul>}</div>)}
+          {content.sections.map((section, index) => { const example = chapterExamples[chapter.slug]?.[index]; return <div key={section.title}><h2>{section.title}</h2><p>{section.body}</p>{section.points && <ul className="mt-4 space-y-2">{section.points.map(point => <li key={point} className="flex gap-3 text-sm text-muted"><CheckCircle2 size={16} className="mt-1 shrink-0 text-cyan-500" /><span>{point}</span></li>)}</ul>}{example && <aside className="mt-5 rounded-2xl border border-amber-400/30 bg-amber-400/5 p-5"><div className="flex items-center gap-2 text-amber-600"><Lightbulb size={18}/><span className="text-[10px] font-black uppercase tracking-[.14em]">Ví dụ thực tế</span></div><h3 className="mt-3 text-base font-black">{example.title}</h3><p className="mt-2 !text-sm !leading-6">{example.body}</p></aside>}</div>})}
           <div className="note"><Lightbulb className="shrink-0" /><div><strong>Điểm cần nhớ</strong><p>{content.takeaway}</p></div></div>
           <div className="mt-7 rounded-2xl border border-amber-400/30 bg-amber-400/5 p-5"><div className="flex items-center gap-2 text-amber-600"><AlertTriangle size={18} /><strong>Lỗi thường gặp</strong></div><ul className="mt-3 space-y-2">{content.mistakes.map(item => <li key={item} className="flex gap-2 text-sm text-muted"><span className="text-amber-500">•</span>{item}</li>)}</ul></div>
         </section>
