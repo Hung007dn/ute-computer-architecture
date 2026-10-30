@@ -18,6 +18,7 @@ import {
   Search,
   Sun,
   Trophy,
+  UserRound,
   Video,
   X,
 } from "lucide-react";
@@ -201,6 +202,14 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
                       <span className="mt-1 block truncate text-xs text-muted">{user.email}</span>
                     </div>
                     <Link
+                      href="/account"
+                      onClick={() => setAccountMenu(false)}
+                      className="mobile-link mt-1"
+                    >
+                      <UserRound size={17} />
+                      <span>Thông tin tài khoản</span>
+                    </Link>
+                    <Link
                       href={
                         user.mustChangePassword
                           ? "/change-password"
@@ -209,7 +218,7 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
                             : "/dashboard"
                       }
                       onClick={() => setAccountMenu(false)}
-                      className="mobile-link mt-1"
+                      className="mobile-link"
                     >
                       <LayoutDashboard size={17} />
                       <span>{user.role === "ADMIN" ? "Trang quản trị" : "Dashboard"}</span>
