@@ -68,6 +68,17 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
     return () => window.removeEventListener("keydown", handler);
   }, []);
   useEffect(() => {
+    setMenu(false);
+  }, [pathname]);
+  useEffect(() => {
+    if (!menu) return;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [menu]);
+  useEffect(() => {
     fetch("/api/auth/me")
       .then(async (response) =>
         response.ok
@@ -199,27 +210,36 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
               </Link>
             )}
             <button
+              type="button"
               className="square-button xl:hidden"
-              onClick={() => setMenu(true)}
-              aria-label="Mở menu"
+              onClick={() => setMenu((current) => !current)}
+              aria-label={menu ? "Đóng menu" : "Mở menu"}
+              aria-expanded={menu}
+              aria-controls="mobile-navigation"
             >
-              <Menu size={20} />
+              {menu ? <X size={20} /> : <Menu size={20} />}
             </button>
           </div>
         </div>
       </header>
       {menu && (
         <div
-          className="fixed inset-0 z-[60] bg-slate-950/55 backdrop-blur-sm xl:hidden"
+          className="fixed inset-0 z-[60] bg-slate-950/55 backdrop-blur-sm"
           onClick={() => setMenu(false)}
+          role="presentation"
         >
           <aside
-            className="ml-auto h-full w-[min(340px,88vw)] bg-surface p-5 shadow-2xl"
+            id="mobile-navigation"
+            className="ml-auto h-full w-[min(360px,88vw)] overflow-y-auto border-l border-border bg-surface p-5 shadow-2xl"
             onClick={(e) => e.stopPropagation()}
+            role="dialog"
+            aria-modal="true"
+            aria-label="Menu điều hướng"
           >
             <div className="mb-7 flex items-center justify-between">
               <strong>Điều hướng</strong>
               <button
+                type="button"
                 className="square-button"
                 onClick={() => setMenu(false)}
                 aria-label="Đóng menu"
@@ -262,7 +282,7 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
                 <ChevronRight className="ml-auto" size={16} />
               </Link>
               {user && (
-                <button onClick={logout} className="mobile-link w-full">
+                <button type="button" onClick={logout} className="mobile-link w-full">
                   <LogOut size={18} />
                   <span>Đăng xuất</span>
                 </button>
