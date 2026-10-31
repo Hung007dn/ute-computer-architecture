@@ -5,7 +5,6 @@ import {
   Bot,
   CheckCircle2,
   LoaderCircle,
-  Mail,
   MessageCircle,
   Send,
   X,
@@ -96,9 +95,9 @@ export function ContactChatbot({
           <div className="overflow-y-auto p-5">
             <div className="max-w-[90%] rounded-2xl rounded-tl-md bg-soft p-4 text-sm leading-6">
               Xin chào! Bạn có thể gửi tin nhắn trực tiếp cho Admin hoặc liên hệ
-              qua một trong ba kênh bên dưới.
+              qua một trong hai kênh bên dưới.
             </div>
-            <div className="mt-4 grid grid-cols-3 gap-2">
+            <div className="mt-4 grid grid-cols-2 gap-2">
               <a
                 href="https://zalo.me/0911112020"
                 target="_blank"
@@ -122,16 +121,6 @@ export function ContactChatbot({
                   f
                 </span>
                 <span>Facebook</span>
-              </a>
-              <a
-                href="mailto:anhbahung1110@gmail.com?subject=Liên hệ từ UTE Computer Architecture"
-                className="flex flex-col items-center gap-2 rounded-2xl border border-border p-3 text-xs font-bold transition hover:border-rose-500 hover:bg-rose-500/5"
-                aria-label="Liên hệ qua Email"
-              >
-                <span className="grid h-9 w-9 place-items-center rounded-xl bg-rose-500 text-white">
-                  <Mail size={18} />
-                </span>
-                <span>Email</span>
               </a>
             </div>
             {isAuthenticated ? (
