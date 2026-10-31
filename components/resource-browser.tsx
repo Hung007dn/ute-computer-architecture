@@ -23,7 +23,17 @@ const lecturers = [
   { value: "Đinh Công Đoan", label: "GV. Đinh Công Đoan" },
   { value: "Võ Lê Phúc Hậu", label: "GV. Võ Lê Phúc Hậu" },
 ];
-const chapterOptions = ["Tất cả chương", ...chapters.map(chapter => chapter.title)];
+const chapterOptions = [
+  { value: "Tất cả chương", label: "Tất cả chương" },
+  ...chapters.map((chapter) => ({
+    value: chapter.title,
+    label: `Chương ${chapter.id}: ${chapter.title}`,
+  })),
+];
+
+function formatChapterLabel(value: string) {
+  return chapterOptions.find((item) => item.value === value)?.label || value;
+}
 
 function DocumentUploader({ onUploaded }: { onUploaded: (document: UploadedDocument) => void }) {
   const fileRef = useRef<HTMLInputElement>(null);
@@ -62,7 +72,7 @@ function DocumentUploader({ onUploaded }: { onUploaded: (document: UploadedDocum
       <label className="sm:col-span-2"><span className="mb-2 block text-xs font-bold">Tên tài liệu</span><input name="title" required maxLength={160} className="h-12 w-full rounded-xl border border-border bg-page px-4 text-sm outline-none focus:border-cyan-400" placeholder="Ví dụ: Slide chương 1 – Tổng quan" /></label>
       <label><span className="mb-2 block text-xs font-bold">Phân loại</span><select name="type" className="h-12 w-full rounded-xl border border-border bg-page px-4 text-sm outline-none focus:border-cyan-400">{categories.map(item => <option key={item}>{item}</option>)}</select></label>
       <label><span className="mb-2 block text-xs font-bold">Nhóm giảng viên</span><select name="lecturer" required className="h-12 w-full rounded-xl border border-border bg-page px-4 text-sm outline-none focus:border-cyan-400">{lecturers.map(item => <option key={item.value} value={item.value}>{item.label}</option>)}</select></label>
-      <label><span className="mb-2 block text-xs font-bold">Chương</span><select name="chapter" required className="h-12 w-full rounded-xl border border-border bg-page px-4 text-sm outline-none focus:border-cyan-400">{chapterOptions.map(item => <option key={item}>{item}</option>)}</select></label>
+      <label><span className="mb-2 block text-xs font-bold">Chương</span><select name="chapter" required className="h-12 w-full rounded-xl border border-border bg-page px-4 text-sm outline-none focus:border-cyan-400">{chapterOptions.map(item => <option key={item.value} value={item.value}>{item.label}</option>)}</select></label>
       <label><span className="mb-2 block text-xs font-bold">Chọn file</span><input ref={fileRef} name="file" type="file" required accept=".pdf,.docx,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document" className="block h-12 w-full cursor-pointer rounded-xl border border-border bg-page text-sm file:mr-3 file:h-full file:border-0 file:border-r file:border-border file:bg-soft file:px-4 file:font-bold" /></label>
       <label className="sm:col-span-2"><span className="mb-2 block text-xs font-bold">Mật khẩu quản trị</span><input name="adminKey" type="password" required autoComplete="current-password" className="h-12 w-full rounded-xl border border-border bg-page px-4 text-sm outline-none focus:border-cyan-400" placeholder="Nhập mật khẩu để tải tài liệu" /></label>
       <label className="sm:col-span-2"><span className="mb-2 block text-xs font-bold">Mô tả <span className="font-normal text-muted">(không bắt buộc)</span></span><textarea name="description" maxLength={500} rows={3} className="w-full rounded-xl border border-border bg-page p-4 text-sm outline-none focus:border-cyan-400" placeholder="Nội dung chính hoặc ghi chú về tài liệu" /></label>
@@ -117,12 +127,12 @@ export function ResourceBrowser({ kind }: { kind: "documents" | "videos" }) {
     <section className="mb-5 rounded-2xl border border-border bg-surface p-4 sm:p-5">
       <p className="mb-3 text-xs font-black uppercase tracking-wider text-muted">Chọn tài liệu theo giảng viên</p>
       <div className="flex flex-wrap gap-2">{[{ value: "Tất cả", label: "Tất cả" }, ...lecturers].map(item => <button key={item.value} onClick={() => { setLecturerFilter(item.value); setChapterFilter("Tất cả chương"); }} className={lecturerFilter === item.value ? "primary-button py-2" : "secondary-button py-2"}>{item.label}</button>)}</div>
-      <label className="mt-4 block max-w-md"><span className="mb-2 block text-xs font-bold">Lọc theo chương</span><select value={chapterFilter} onChange={event => setChapterFilter(event.target.value)} className="h-11 w-full rounded-xl border border-border bg-page px-4 text-sm outline-none focus:border-cyan-400">{chapterOptions.map(item => <option key={item}>{item}</option>)}</select></label>
+      <label className="mt-4 block max-w-md"><span className="mb-2 block text-xs font-bold">Lọc theo chương</span><select value={chapterFilter} onChange={event => setChapterFilter(event.target.value)} className="h-11 w-full rounded-xl border border-border bg-page px-4 text-sm outline-none focus:border-cyan-400">{chapterOptions.map(item => <option key={item.value} value={item.value}>{item.label}</option>)}</select></label>
     </section>
     <div className="mb-7 flex flex-wrap gap-2">{types.map(type => <button key={type} onClick={() => setFilter(type)} className={filter === type ? "primary-button py-2" : "secondary-button py-2"}>{type}</button>)}</div>
     {loadError && <p className="mb-5 rounded-xl bg-rose-500/10 p-4 text-sm text-rose-500">{loadError}</p>}
     {loading ? <div className="flex items-center gap-2 py-8 text-sm text-muted"><LoaderCircle size={18} className="animate-spin" />Đang tải thư viện...</div> : <div className="grid gap-4 md:grid-cols-2">
-      {visibleUploaded.map(item => <article key={`uploaded-${item.id}`} className="rounded-2xl border border-cyan-400/25 bg-surface p-5"><div className="flex items-start gap-4"><span className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-cyan-500/10 text-cyan-500"><FileText /></span><div className="min-w-0"><div className="flex flex-wrap gap-2 text-xs"><span className="rounded-full bg-cyan-500/10 px-2 py-1 font-bold text-cyan-600">{item.lecturer === "Kiến thức chung" ? item.lecturer : `GV. ${item.lecturer}`}</span><span className="rounded-full bg-blue-500/10 px-2 py-1 text-blue-600">{item.chapter}</span></div><small className="mt-2 block text-muted">{item.type} · {item.year || "Mới"}</small><h2 className="mt-1 font-bold leading-6">{item.title}</h2>{item.description && <p className="mt-2 text-sm text-muted">{item.description}</p>}</div></div><a href={item.downloadUrl} target="_blank" rel="noreferrer" className="primary-button mt-5 w-full py-2">Mở / tải xuống <ExternalLink size={15} /></a></article>)}
+      {visibleUploaded.map(item => <article key={`uploaded-${item.id}`} className="rounded-2xl border border-cyan-400/25 bg-surface p-5"><div className="flex items-start gap-4"><span className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-cyan-500/10 text-cyan-500"><FileText /></span><div className="min-w-0"><div className="flex flex-wrap gap-2 text-xs"><span className="rounded-full bg-cyan-500/10 px-2 py-1 font-bold text-cyan-600">{item.lecturer === "Kiến thức chung" ? item.lecturer : `GV. ${item.lecturer}`}</span><span className="rounded-full bg-blue-500/10 px-2 py-1 text-blue-600">{formatChapterLabel(item.chapter)}</span></div><small className="mt-2 block text-muted">{item.type} · {item.year || "Mới"}</small><h2 className="mt-1 font-bold leading-6">{item.title}</h2>{item.description && <p className="mt-2 text-sm text-muted">{item.description}</p>}</div></div><a href={item.downloadUrl} target="_blank" rel="noreferrer" className="primary-button mt-5 w-full py-2">Mở / tải xuống <ExternalLink size={15} /></a></article>)}
       {visibleSamples.map(item => <article key={`sample-${item.title}`} className="rounded-2xl border border-border bg-surface p-5 opacity-75"><div className="flex items-start gap-4"><span className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-blue-500/10 text-blue-500"><FileText /></span><div><small className="text-muted">{item.type} · {item.year}</small><h2 className="mt-1 font-bold leading-6">{item.title}</h2><p className="mt-2 text-xs text-muted">Tài liệu mẫu · chưa có file đính kèm</p></div></div></article>)}
       {!visibleUploaded.length && !visibleSamples.length && <div className="rounded-2xl border border-dashed border-border p-8 text-center text-sm text-muted md:col-span-2">Chưa có tài liệu trong mục này.</div>}
     </div>}
