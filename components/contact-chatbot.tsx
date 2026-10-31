@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "@/components/safe-link";
 import {
   Bot,
   CheckCircle2,
@@ -11,11 +10,7 @@ import {
 } from "lucide-react";
 import { FormEvent, useEffect, useState } from "react";
 
-export function ContactChatbot({
-  isAuthenticated,
-}: {
-  isAuthenticated: boolean;
-}) {
+export function ContactChatbot() {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [text, setText] = useState("");
@@ -123,8 +118,7 @@ export function ContactChatbot({
                 <span>Facebook</span>
               </a>
             </div>
-            {isAuthenticated ? (
-              <form onSubmit={send} className="mt-4">
+            <form onSubmit={send} className="mt-4">
                 <label
                   htmlFor="admin-chat-message"
                   className="mb-2 block text-xs font-bold"
@@ -163,20 +157,7 @@ export function ContactChatbot({
                   )}
                   {loading ? "Đang gửi..." : "Gửi tin nhắn"}
                 </button>
-              </form>
-            ) : (
-              <div className="mt-4 rounded-2xl border border-dashed border-border bg-soft p-4 text-center">
-                <p className="text-xs leading-5 text-muted">
-                  Đăng nhập để nhắn trực tiếp trong website.
-                </p>
-                <Link
-                  href="/login?returnTo=/"
-                  className="secondary-button mt-3 py-2"
-                >
-                  <span>Đăng nhập</span>
-                </Link>
-              </div>
-            )}
+            </form>
           </div>
         </section>
       )}

@@ -262,9 +262,9 @@ export const notes = sqliteTable("notes", {
 });
 export const feedback = sqliteTable("feedback", {
   id: integer("id").primaryKey({ autoIncrement: true }),
-  userId: text("user_id")
-    .notNull()
-    .references(() => users.id, { onDelete: "cascade" }),
+  userId: text("user_id").references(() => users.id, {
+    onDelete: "cascade",
+  }),
   category: text("category", {
     enum: ["CONTENT", "TECHNICAL", "SUGGESTION", "OTHER"],
   }).notNull(),

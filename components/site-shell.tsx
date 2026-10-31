@@ -409,7 +409,7 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
         </div>
       )}
       <main>{children}</main>
-      <ContactChatbot isAuthenticated={Boolean(user)} />
+      <ContactChatbot />
       <footer className="border-t border-border bg-surface">
         <div className="mx-auto grid max-w-[1200px] gap-8 px-5 py-10 md:grid-cols-[1.5fr_1fr_1fr]">
           <div>

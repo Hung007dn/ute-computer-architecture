@@ -18,7 +18,7 @@ type FeedbackItem = {
   createdAt: string;
   updatedAt: string;
   userName: string | null;
-  userEmail: string;
+  userEmail: string | null;
 };
 
 const categoryLabels = {
@@ -139,7 +139,10 @@ export function FeedbackManager() {
                   {item.message}
                 </p>
                 <p className="mt-4 text-xs text-muted">
-                  {item.userName || "Sinh viên"} · {item.userEmail} ·{" "}
+                  {item.userEmail
+                    ? `${item.userName || "Sinh viên"} · ${item.userEmail}`
+                    : "Khách chưa đăng nhập"}{" "}
+                  ·{" "}
                   {new Date(item.createdAt).toLocaleString("vi-VN")}
                 </p>
               </div>

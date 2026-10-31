@@ -11,11 +11,6 @@ const statuses = ["NEW", "READ", "RESOLVED"] as const;
 
 export async function POST(request: Request) {
   const user = await getCurrentUser();
-  if (!user || user.mustChangePassword)
-    return NextResponse.json(
-      { error: "Bạn cần đăng nhập để gửi phản hồi." },
-      { status: 401 },
-    );
 
   const body = (await request.json().catch(() => null)) as {
     category?: string;
@@ -44,7 +39,7 @@ export async function POST(request: Request) {
   const [created] = await getDb()
     .insert(feedbackRecords)
     .values({
-      userId: user.id,
+      userId: user && !user.mustChangePassword ? user.id : null,
       category: category as (typeof categories)[number],
       subject,
       message,
@@ -78,7 +73,7 @@ export async function GET() {
       userEmail: users.email,
     })
     .from(feedbackRecords)
-    .innerJoin(users, eq(feedbackRecords.userId, users.id))
+    .leftJoin(users, eq(feedbackRecords.userId, users.id))
     .orderBy(desc(feedbackRecords.createdAt))
     .limit(100);
 
