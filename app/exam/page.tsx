@@ -84,10 +84,10 @@ export default function ExamPage() {
           <div className="flex gap-3">
             <ShieldCheck className="shrink-0 text-emerald-500" />
             <div>
-              <strong className="text-sm">Đề luyện đã kiểm tra</strong>
+              <strong className="text-sm">Đã nhập đủ số câu</strong>
               <p className="mt-1 text-xs leading-5 text-muted">
-                Đáp án được ẩn đến khi nộp. Nội dung nguồn có lỗi đã được hiệu
-                chỉnh trước khi đưa vào hệ thống.
+                Mỗi đề giữ nguyên số lượng câu theo tài liệu gốc: 24, 36, 42,
+                45 hoặc 53 câu. Đáp án chỉ hiển thị sau khi nộp bài.
               </p>
             </div>
           </div>
@@ -99,7 +99,7 @@ export default function ExamPage() {
           <BookOpenCheck size={13} /> 11 bộ đề
         </span>
         <span className="chip">
-          <FileCheck2 size={13} /> 3 năm đề thi
+          <FileCheck2 size={13} /> 470 câu theo đề gốc
         </span>
         <span className="chip">
           <UserRoundCog size={13} /> Admin biên soạn
