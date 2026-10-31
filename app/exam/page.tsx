@@ -12,6 +12,13 @@ import {
 import { QuizEngine } from "@/components/quiz-engine";
 import { finalExams } from "@/data/final-exams";
 
+const examGroups = [...new Set(finalExams.map((exam) => exam.year))]
+  .sort((a, b) => b - a)
+  .map((year) => ({
+    year,
+    exams: finalExams.filter((exam) => exam.year === year),
+  }));
+
 export default function ExamPage() {
   const [activeExamId, setActiveExamId] = useState<string | null>(null);
   const activeExam = useMemo(
@@ -68,9 +75,9 @@ export default function ExamPage() {
           <span className="eyebrow">Final exam archive</span>
           <h1 className="section-title mt-4">Ngân hàng đề cuối kỳ.</h1>
           <p className="muted-copy mt-4 max-w-2xl">
-            11 bộ đề được Admin phân loại từ tài liệu tổng hợp 166 trang. Câu
-            hỏi đã được chuẩn hóa, sửa lỗi đáp án và sắp xếp thành các lượt
-            luyện riêng.
+            Các đề được Admin phân loại theo từng năm từ tài liệu tổng hợp 166
+            trang. Mỗi thẻ bên dưới là một đề độc lập; câu hỏi của đề nào chỉ
+            xuất hiện trong lượt làm của đề đó.
           </p>
         </div>
         <aside className="panel p-5">
@@ -92,51 +99,67 @@ export default function ExamPage() {
           <BookOpenCheck size={13} /> 11 bộ đề
         </span>
         <span className="chip">
-          <FileCheck2 size={13} /> 2017–2019
+          <FileCheck2 size={13} /> 3 năm đề thi
         </span>
         <span className="chip">
           <UserRoundCog size={13} /> Admin biên soạn
         </span>
       </div>
 
-      <div className="mt-8 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
-        {finalExams.map((exam, index) => (
-          <article key={exam.id} className="panel overflow-hidden">
-            <div
-              className={`h-2 bg-gradient-to-r ${index % 3 === 0 ? "from-cyan-400 to-blue-500" : index % 3 === 1 ? "from-blue-600 to-violet-500" : "from-violet-500 to-rose-400"}`}
-            />
-            <div className="p-6">
-              <div className="flex items-start justify-between gap-3">
-                <span className="grid h-11 w-11 place-items-center rounded-xl bg-blue-500/10 text-blue-500">
-                  <FileCheck2 size={21} />
-                </span>
-                <span className="rounded-full bg-emerald-500/10 px-3 py-1 text-[10px] font-bold text-emerald-600">
-                  Admin biên soạn
-                </span>
+      <div className="mt-10 space-y-12">
+        {examGroups.map((group) => (
+          <section key={group.year} aria-labelledby={`exam-year-${group.year}`}>
+            <div className="mb-5 flex flex-wrap items-end justify-between gap-3 border-b border-border pb-4">
+              <div>
+                <span className="eyebrow">Phân loại theo năm</span>
+                <h2 id={`exam-year-${group.year}`} className="mt-2 text-3xl font-black tracking-tight">
+                  Đề thi năm {group.year}
+                </h2>
               </div>
-              <h2 className="mt-5 text-xl font-black tracking-tight">
-                {exam.title}
-              </h2>
-              <p className="mt-2 min-h-10 text-sm leading-5 text-muted">
-                {exam.subtitle}
-              </p>
-              <div className="my-5 flex flex-wrap gap-2">
-                <span className="chip">{exam.questions.length} câu luyện</span>
-                <span className="chip">{exam.minutes} phút</span>
-                <span className="chip">Nguồn: trang {exam.sourcePages}</span>
-              </div>
-              <p className="mb-5 text-xs leading-5 text-muted">
-                Chọn lọc từ {exam.sourceQuestionCount} câu của bộ đề gốc năm {exam.year}.
-              </p>
-              <button
-                type="button"
-                onClick={() => setActiveExamId(exam.id)}
-                className="primary-button w-full"
-              >
-                <PlayCircle size={17} /> Bắt đầu làm đề
-              </button>
+              <span className="chip">{group.exams.length} đề độc lập</span>
             </div>
-          </article>
+
+            <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+              {group.exams.map((exam, index) => (
+                <article key={exam.id} className="panel overflow-hidden">
+                  <div
+                    className={`h-2 bg-gradient-to-r ${index % 3 === 0 ? "from-cyan-400 to-blue-500" : index % 3 === 1 ? "from-blue-600 to-violet-500" : "from-violet-500 to-rose-400"}`}
+                  />
+                  <div className="p-6">
+                    <div className="flex items-start justify-between gap-3">
+                      <span className="grid h-11 w-11 place-items-center rounded-xl bg-blue-500/10 text-blue-500">
+                        <FileCheck2 size={21} />
+                      </span>
+                      <span className="rounded-full bg-emerald-500/10 px-3 py-1 text-[10px] font-bold text-emerald-600">
+                        Admin biên soạn
+                      </span>
+                    </div>
+                    <h3 className="mt-5 text-xl font-black tracking-tight">
+                      {exam.title}
+                    </h3>
+                    <p className="mt-2 min-h-10 text-sm leading-5 text-muted">
+                      {exam.subtitle}
+                    </p>
+                    <div className="my-5 flex flex-wrap gap-2">
+                      <span className="chip">Đề riêng · {exam.questions.length} câu</span>
+                      <span className="chip">{exam.minutes} phút</span>
+                      <span className="chip">Nguồn: trang {exam.sourcePages}</span>
+                    </div>
+                    <p className="mb-5 text-xs leading-5 text-muted">
+                      Thuộc bộ đề năm {group.year}; không trộn câu với các đề khác.
+                    </p>
+                    <button
+                      type="button"
+                      onClick={() => setActiveExamId(exam.id)}
+                      className="primary-button w-full"
+                    >
+                      <PlayCircle size={17} /> Làm đề này
+                    </button>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </section>
         ))}
       </div>
     </div>
