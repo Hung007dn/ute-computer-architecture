@@ -1,10 +1,57 @@
-import { NextResponse } from "next/server";
 import { eq } from "drizzle-orm";
+import { NextResponse } from "next/server";
 import { z } from "zod";
-import { getCurrentUser } from "@/lib/student-auth";
+import { chapters } from "@/data/course";
 import { getDb } from "@/db";
-import { lessonProgress } from "@/db/schema";
+import { chapterProgress } from "@/db/schema";
+import { getCurrentUser } from "@/lib/student-auth";
 
-const payloadSchema=z.object({lessonId:z.number().int().positive(),status:z.enum(["NOT_STARTED","IN_PROGRESS","COMPLETED"])});
-export async function POST(request:Request){const user=await getCurrentUser();if(!user)return NextResponse.json({error:"UNAUTHORIZED"},{status:401});const parsed=payloadSchema.safeParse(await request.json());if(!parsed.success)return NextResponse.json({error:"INVALID_INPUT",details:parsed.error.flatten()},{status:400});const db=getDb();await db.insert(lessonProgress).values({userId:user.id,lessonId:parsed.data.lessonId,status:parsed.data.status,completedAt:parsed.data.status==="COMPLETED"?new Date():null}).onConflictDoUpdate({target:[lessonProgress.userId,lessonProgress.lessonId],set:{status:parsed.data.status,completedAt:parsed.data.status==="COMPLETED"?new Date():null,updatedAt:new Date()}});return NextResponse.json({ok:true});}
-export async function GET(){const user=await getCurrentUser();if(!user)return NextResponse.json({error:"UNAUTHORIZED"},{status:401});const db=getDb();const progress=await db.select().from(lessonProgress).where(eq(lessonProgress.userId,user.id));return NextResponse.json({progress});}
+const payloadSchema = z.object({
+  chapterSlug: z.string().min(1),
+  status: z.enum(["NOT_STARTED", "COMPLETED"]),
+});
+
+export async function POST(request: Request) {
+  const user = await getCurrentUser();
+  if (!user || user.mustChangePassword)
+    return NextResponse.json({ error: "UNAUTHORIZED" }, { status: 401 });
+
+  const parsed = payloadSchema.safeParse(await request.json());
+  if (
+    !parsed.success ||
+    !chapters.some((chapter) => chapter.slug === parsed.data.chapterSlug)
+  )
+    return NextResponse.json({ error: "INVALID_INPUT" }, { status: 400 });
+
+  const completed = parsed.data.status === "COMPLETED";
+  await getDb()
+    .insert(chapterProgress)
+    .values({
+      userId: user.id,
+      chapterSlug: parsed.data.chapterSlug,
+      status: parsed.data.status,
+      completedAt: completed ? new Date() : null,
+    })
+    .onConflictDoUpdate({
+      target: [chapterProgress.userId, chapterProgress.chapterSlug],
+      set: {
+        status: parsed.data.status,
+        completedAt: completed ? new Date() : null,
+        updatedAt: new Date(),
+      },
+    });
+
+  return NextResponse.json({ ok: true, completed });
+}
+
+export async function GET() {
+  const user = await getCurrentUser();
+  if (!user)
+    return NextResponse.json({ error: "UNAUTHORIZED" }, { status: 401 });
+
+  const progress = await getDb()
+    .select()
+    .from(chapterProgress)
+    .where(eq(chapterProgress.userId, user.id));
+  return NextResponse.json({ progress });
+}

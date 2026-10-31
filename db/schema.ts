@@ -97,6 +97,29 @@ export const lessonProgress = sqliteTable(
     uniqueIndex("lesson_progress_user_lesson_idx").on(t.userId, t.lessonId),
   ],
 );
+export const chapterProgress = sqliteTable(
+  "chapter_progress",
+  {
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    userId: text("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    chapterSlug: text("chapter_slug").notNull(),
+    status: text("status", {
+      enum: ["NOT_STARTED", "COMPLETED"],
+    })
+      .notNull()
+      .default("NOT_STARTED"),
+    completedAt: integer("completed_at", { mode: "timestamp" }),
+    ...timestamps,
+  },
+  (t) => [
+    uniqueIndex("chapter_progress_user_chapter_idx").on(
+      t.userId,
+      t.chapterSlug,
+    ),
+  ],
+);
 export const questions = sqliteTable("questions", {
   id: integer("id").primaryKey({ autoIncrement: true }),
   chapterId: integer("chapter_id")

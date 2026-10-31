@@ -147,7 +147,7 @@ function SectionContent({ active, chapter }: { active: SectionId; chapter: Chapt
   );
 }
 
-export function LessonContentTabs({ chapter, previousChapter, nextChapter }: { chapter: Chapter; previousChapter: Chapter | null; nextChapter: Chapter | null }) {
+export function LessonContentTabs({ chapter, previousChapter, nextChapter, initialCompleted, isAuthenticated }: { chapter: Chapter; previousChapter: Chapter | null; nextChapter: Chapter | null; initialCompleted: boolean; isAuthenticated: boolean }) {
   const [active, setActive] = useState<SectionId>("concepts");
   const content = chapterContents[chapter.slug];
   const details = active === "concepts"
@@ -181,7 +181,7 @@ export function LessonContentTabs({ chapter, previousChapter, nextChapter }: { c
           <div className="my-7 flex flex-wrap gap-2"><span className="chip">{chapter.lessons} bài học</span><span className="chip">{chapter.exercises} bài tập</span><span className="chip">{chapter.quizzes} câu quiz</span></div>
           <div className="mb-6 grid grid-cols-2 gap-2 lg:hidden" role="tablist" aria-label="Nội dung chương">{sections.map((section) => <button key={section.id} type="button" role="tab" aria-selected={active === section.id} onClick={() => selectSection(section.id)} className={`flex items-center justify-center gap-2 rounded-xl border px-3 py-3 text-xs font-bold ${active === section.id ? "border-blue-500 bg-blue-500/10 text-blue-500" : "border-border bg-surface text-muted"}`}><section.icon size={15} />{section.shortLabel}</button>)}</div>
           <div key={active} role="tabpanel" className="animate-in fade-in duration-300"><SectionContent active={active} chapter={chapter} /></div>
-          <div className="mt-10 flex flex-wrap items-center justify-between gap-3 border-t border-border pt-7"><LessonActions slug={chapter.slug} />{active !== "quiz" && <button type="button" onClick={() => selectSection("quiz")} className="secondary-button">Đến phần Quiz <ArrowRight size={15} /></button>}</div>
+          <div className="mt-10 flex flex-wrap items-center justify-between gap-3 border-t border-border pt-7"><LessonActions slug={chapter.slug} initialCompleted={initialCompleted} isAuthenticated={isAuthenticated} />{active !== "quiz" && <button type="button" onClick={() => selectSection("quiz")} className="secondary-button">Đến phần Quiz <ArrowRight size={15} /></button>}</div>
           <div className="mt-10 grid gap-3 sm:grid-cols-2">{previousChapter ? <Link href={`/learn/${previousChapter.slug}`} className="rounded-xl border border-border bg-surface p-4 text-sm"><small className="text-muted">Bài trước</small><strong className="mt-1 block">← {previousChapter.title}</strong></Link> : <span />}{nextChapter && <Link href={`/learn/${nextChapter.slug}`} className="rounded-xl border border-border bg-surface p-4 text-right text-sm"><small className="text-muted">Bài tiếp theo</small><strong className="mt-1 block">{nextChapter.title} →</strong></Link>}</div>
         </div>
       </article>
