@@ -54,6 +54,9 @@ export const finalExams: FinalExam[] = (rawExamData as RawExam[]).map(
       ...examMetadata,
       sourceQuestionCount: rawExam.sourceQuestionCount,
       questions: rawExam.questions.map((question, questionIndex) => {
+        const reviewOnly = question.options.some((option) =>
+          option.includes("Đáp án được trình bày trong đề gốc"),
+        );
         const shift = (examIndex + questionIndex) % question.options.length;
         const options = [...question.options.slice(shift), ...question.options.slice(0, shift)];
         return {
@@ -61,9 +64,11 @@ export const finalExams: FinalExam[] = (rawExamData as RawExam[]).map(
           id: (examIndex + 1) * 1000 + question.number,
           prompt: question.prompt,
           options,
-          answer: (question.answer - shift + question.options.length) % question.options.length,
+          answer: reviewOnly
+            ? -1
+            : (question.answer - shift + question.options.length) % question.options.length,
           difficulty: question.difficulty,
-          tags: question.tags,
+          tags: reviewOnly ? [...question.tags, "Câu tham khảo"] : question.tags,
           explanation: question.explanation,
         };
       }),

@@ -87,7 +87,8 @@ export default function ExamPage() {
               <strong className="text-sm">Đã nhập đủ số câu</strong>
               <p className="mt-1 text-xs leading-5 text-muted">
                 Mỗi đề giữ nguyên số lượng câu theo tài liệu gốc: 24, 36, 42,
-                45 hoặc 53 câu. Đáp án chỉ hiển thị sau khi nộp bài.
+                45 hoặc 53 câu. Câu nào bản nguồn không hiện rõ đáp án sẽ được
+                đánh dấu tham khảo và không tính điểm.
               </p>
             </div>
           </div>
