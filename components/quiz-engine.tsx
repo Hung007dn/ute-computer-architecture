@@ -9,6 +9,7 @@ type QuizEngineProps = {
   chapterIds?: number[];
   questionCount?: number;
   difficulty?: Question["difficulty"];
+  questionSet?: Question[];
 };
 
 function orderedQuestions(items: Question[], preferredDifficulty?: Question["difficulty"]) {
@@ -37,10 +38,19 @@ function buildBalancedPool(chapterIds: number[], count: number, difficulty?: Que
   return result;
 }
 
-export function QuizEngine({ examMode = false, chapterIds, questionCount, difficulty }: QuizEngineProps) {
-  const selectedChapterIds = chapterIds?.length ? chapterIds : chapters.map((item) => item.id);
+export function QuizEngine({ examMode = false, chapterIds, questionCount, difficulty, questionSet }: QuizEngineProps) {
+  const selectedChapterIds = chapterIds?.length
+    ? chapterIds
+    : questionSet?.length
+      ? [...new Set(questionSet.map((item) => item.chapterId))]
+      : chapters.map((item) => item.id);
   const targetCount = questionCount ?? (examMode ? 10 : 15);
-  const pool = useMemo(() => buildBalancedPool(selectedChapterIds, targetCount, difficulty), [selectedChapterIds.join(","), targetCount, difficulty]);
+  const pool = useMemo(
+    () => questionSet?.length
+      ? questionSet
+      : buildBalancedPool(selectedChapterIds, targetCount, difficulty),
+    [questionSet, selectedChapterIds.join(","), targetCount, difficulty],
+  );
   const [index, setIndex] = useState(0);
   const [answers, setAnswers] = useState<Record<number, number>>({});
   const [submitted, setSubmitted] = useState(false);
