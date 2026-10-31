@@ -74,11 +74,6 @@ export default function ExamPage() {
         <div>
           <span className="eyebrow">Final exam archive</span>
           <h1 className="section-title mt-4">Ngân hàng đề cuối kỳ.</h1>
-          <p className="muted-copy mt-4 max-w-2xl">
-            Các đề được Admin phân loại theo từng năm từ tài liệu tổng hợp 166
-            trang. Mỗi thẻ bên dưới là một đề độc lập; câu hỏi của đề nào chỉ
-            xuất hiện trong lượt làm của đề đó.
-          </p>
         </div>
         <aside className="panel p-5">
           <div className="flex gap-3">
